@@ -1,0 +1,17 @@
+{
+  "name": "vibe-idea",
+  "version": "1.0.0",
+  "description": "Capturing and developing innovative concepts and creative ideas",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "brainstorm": "node src/brainstorm.js",
+    "test": "jest"
+  },
+  "keywords": ["idea", "innovation", "creativity", "inspiration", "ideation", "concepts"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
