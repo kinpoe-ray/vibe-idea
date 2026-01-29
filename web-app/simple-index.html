@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Idea - Your AI Creative Partner</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    #root {
+      width: 100%;
+      max-width: 800px;
+      height: 90vh;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+
+    .messages-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background-color: #f9f9ff;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      max-width: 85%;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .message.system {
+      align-self: flex-start;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    .avatar.user {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      color: #333;
+    }
+
+    .avatar.system {
+      background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+      color: #333;
+    }
+
+    .message-bubble {
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.5;
+      position: relative;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      border-bottom-right-radius: 5px;
+    }
+
+    .message.system .message-bubble {
+      background: white;
+      color: #333;
+      border: 1px solid #eee;
+      border-bottom-left-radius: 5px;
+    }
+
+    .message-bubble p {
+      margin: 0 0 8px 0;
+    }
+
+    .message-bubble p:last-child {
+      margin-bottom: 0;
+    }
+
+    .input-area {
+      padding: 20px;
+      background: white;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-area textarea {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      resize: none;
+      height: 50px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .input-area textarea:focus {
+      border-color: #4facfe;
+    }
+
+    .send-button {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: flex-end;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 1.2rem;
+    }
+
+    .send-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(37, 117, 252, 0.3);
+    }
+
+    .send-button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 15px;
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 20px;
+      align-self: flex-start;
+      font-style: italic;
+      color: #777;
+    }
+
+    /* Pixel art styling for the character */
+    .pixel-character {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+    }
+
+    .pixel-character div {
+      position: absolute;
+    }
+
+    .pixel-head {
+      width: 20px;
+      height: 20px;
+      background-color: #FFD700;
+      top: 0;
+      left: 10px;
+      border-radius: 4px;
+    }
+
+    .pixel-eye {
+      width: 4px;
+      height: 4px;
+      background-color: #000;
+      border-radius: 2px;
+      top: 6px;
+    }
+
+    .pixel-eye.left {
+      left: 12px;
+    }
+
+    .pixel-eye.right {
+      left: 24px;
+    }
+
+    .pixel-mouth {
+      width: 8px;
+      height: 3px;
+      background-color: #000;
+      border-radius: 2px;
+      top: 14px;
+      left: 18px;
+    }
+
+    .pixel-body {
+      width: 20px;
+      height: 15px;
+      background-color: #4CAF50;
+      top: 20px;
+      left: 10px;
+    }
+
+    .pixel-arm {
+      width: 3px;
+      height: 10px;
+      background-color: #FFD700;
+    }
+
+    .pixel-arm.left {
+      top: 22px;
+      left: 6px;
+      transform: rotate(20deg);
+    }
+
+    .pixel-arm.right {
+      top: 22px;
+      left: 27px;
+      transform: rotate(-20deg);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      #root {
+        height: 95vh;
+      }
+      
+      .header h1 {
+        font-size: 1.4rem;
+      }
+      
+      .message {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="app-container">
+      <div class="header">
+        <h1>Vibe Idea</h1>
+        <p>你的AI创意伙伴</p>
+        <div class="pixel-character">
+          <div class="pixel-head"></div>
+          <div class="pixel-eye left"></div>
+          <div class="pixel-eye right"></div>
+          <div class="pixel-mouth"></div>
+          <div class="pixel-body"></div>
+          <div class="pixel-arm left"></div>
+          <div class="pixel-arm right"></div>
+        </div>
+      </div>
+      
+      <div id="messages-container" class="messages-container">
+        <div class="message system">
+          <div class="avatar system">VI</div>
+          <div class="message-bubble">
+            <p>你好！我是你的创意伙伴，今天想探索什么有趣的想法？</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="input-area">
+        <textarea id="user-input" placeholder="分享你的兴趣或问题..."></textarea>
+        <button id="send-button" class="send-button">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple Idea Engine for Web App
+    class SimpleIdeaEngine {
+      constructor() {
+        this.knowledgeDomains = [
+          'technology', 'sustainability', 'education', 'health', 
+          'creativity', 'business', 'social_impact', 'art'
+        ];
+        
+        this.ideaTemplates = {
+          technology: [
+            'AI-powered solution to optimize {domain}',
+            'Blockchain-based platform for {domain}',
+            'IoT system to monitor and improve {domain}',
+            'Mobile app to help users with {domain}',
+            'AR/VR experience for {domain} education'
+          ],
+          sustainability: [
+            'Circular economy approach to {domain}',
+            'Zero-waste solution for {domain}',
+            'Renewable energy application in {domain}',
+            'Community-driven {domain} initiative',
+            'Upcycling project focused on {domain}'
+          ],
+          education: [
+            'Interactive learning platform for {domain}',
+            'Gamified approach to teaching {domain}',
+            'Peer-to-peer knowledge sharing in {domain}',
+            'Virtual reality classroom for {domain}',
+            'AI tutor specializing in {domain}'
+          ],
+          health: [
+            'Preventive care approach to {domain}',
+            'Mental wellness program for {domain}',
+            'Fitness tracking solution for {domain}',
+            'Telemedicine platform for {domain}',
+            'Nutrition-focused app for {domain}'
+          ],
+          creativity: [
+            'Collaborative workspace for {domain} creators',
+            'AI-assisted {domain} generation tool',
+            'Cross-media storytelling for {domain}',
+            'Creative challenge platform for {domain}',
+            'Digital archive for {domain} works'
+          ],
+          business: [
+            'Subscription model for {domain} services',
+            'Marketplace connecting {domain} providers',
+            'Freemium tool for {domain} professionals',
+            'Consulting service specializing in {domain}',
+            'White-label solution for {domain} businesses'
+          ],
+          social_impact: [
+            'Non-profit organization addressing {domain}',
+            'Crowdfunding platform for {domain} projects',
+            'Volunteer network focused on {domain}',
+            'Awareness campaign for {domain} issues',
+            'Policy advocacy around {domain}'
+          ],
+          art: [
+            'Interactive {domain} installation',
+            'Digital gallery for {domain} artists',
+            'Collaborative {domain} project platform',
+            '{domain} workshop series',
+            'Augmented reality {domain} experience'
+          ]
+        };
+      }
+
+      analyzeInput(userInput) {
+        const input = userInput.toLowerCase();
+        let scores = {};
+        
+        // Score each domain based on keyword matches
+        for (const domain of this.knowledgeDomains) {
+          let score = 0;
+          
+          // General keywords that appear across domains
+          if (input.includes('app') || input.includes('application')) score += 2;
+          if (input.includes('platform') || input.includes('system')) score += 2;
+          if (input.includes('solution') || input.includes('solve')) score += 2;
+          if (input.includes('help') || input.includes('assist')) score += 1;
+          if (input.includes('community') || input.includes('people')) score += 1;
+          if (input.includes('learn') || input.includes('education')) score += 1;
+          
+          // Domain-specific keywords
+          switch(domain) {
+            case 'technology':
+              if (input.includes('ai') || input.includes('artificial intelligence')) score += 3;
+              if (input.includes('blockchain') || input.includes('crypto')) score += 3;
+              if (input.includes('mobile') || input.includes('app')) score += 2;
+              if (input.includes('iot') || input.includes('internet of things')) score += 3;
+              if (input.includes('data') || input.includes('algorithm')) score += 2;
+              break;
+              
+            case 'sustainability':
+              if (input.includes('sustainable') || input.includes('eco')) score += 3;
+              if (input.includes('environment') || input.includes('green')) score += 3;
+              if (input.includes('waste') || input.includes('zero')) score += 2;
+              if (input.includes('energy') || input.includes('renewable')) score += 2;
+              if (input.includes('circular') || input.includes('reuse')) score += 2;
+              break;
+              
+            case 'education':
+              if (input.includes('learn') || input.includes('teach')) score += 3;
+              if (input.includes('school') || input.includes('student')) score += 2;
+              if (input.includes('course') || input.includes('training')) score += 2;
+              if (input.includes('knowledge') || input.includes('skill')) score += 2;
+              if (input.includes('classroom') || input.includes('study')) score += 2;
+              break;
+              
+            case 'health':
+              if (input.includes('health') || input.includes('wellness')) score += 3;
+              if (input.includes('fitness') || input.includes('exercise')) score += 2;
+              if (input.includes('mental') || input.includes('therapy')) score += 2;
+              if (input.includes('nutrition') || input.includes('diet')) score += 2;
+              if (input.includes('medical') || input.includes('patient')) score += 2;
+              break;
+              
+            case 'creativity':
+              if (input.includes('creative') || input.includes('artistic')) score += 3;
+              if (input.includes('design') || input.includes('creative')) score += 2;
+              if (input.includes('music') || input.includes('visual')) score += 2;
+              if (input.includes('writing') || input.includes('story')) score += 2;
+              if (input.includes('maker') || input.includes('craft')) score += 2;
+              break;
+              
+            case 'business':
+              if (input.includes('business') || input.includes('startup')) score += 3;
+              if (input.includes('market') || input.includes('customer')) score += 2;
+              if (input.includes('revenue') || input.includes('profit')) score += 2;
+              if (input.includes('service') || input.includes('product')) score += 2;
+              if (input.includes('entrepreneur') || input.includes('venture')) score += 2;
+              break;
+              
+            case 'social_impact':
+              if (input.includes('impact') || input.includes('change')) score += 3;
+              if (input.includes('community') || input.includes('social')) score += 2;
+              if (input.includes('nonprofit') || input.includes('charity')) score += 2;
+              if (input.includes('advocacy') || input.includes('awareness')) score += 2;
+              if (input.includes('equity') || input.includes('accessibility')) score += 2;
+              break;
+              
+            case 'art':
+              if (input.includes('art') || input.includes('artist')) score += 3;
+              if (input.includes('gallery') || input.includes('exhibition')) score += 2;
+              if (input.includes('creative') || input.includes('expression')) score += 2;
+              if (input.includes('culture') || input.includes('heritage')) score += 2;
+              if (input.includes('performance') || input.includes('theater')) score += 2;
+              break;
+          }
+          
+          scores[domain] = score;
+        }
+        
+        // Find the domain with the highest score
+        let bestDomain = 'general';
+        let bestScore = 0;
+        
+        for (const [domain, score] of Object.entries(scores)) {
+          if (score > bestScore) {
+            bestScore = score;
+            bestDomain = domain;
+          }
+        }
+        
+        // If no strong match, default to general
+        if (bestScore === 0) {
+          bestDomain = 'general';
+        }
+        
+        return {
+          domain: bestDomain,
+          confidence: bestScore > 0 ? Math.min(bestScore / 10, 1) : 0
+        };
+      }
+
+      generateIdeas(inputAnalysis, userInput, count = 2) {
+        const { domain } = inputAnalysis;
+        const ideas = [];
+        
+        // Get templates for the identified domain
+        const templates = this.ideaTemplates[domain] || [
+          'An innovative approach to {domain}',
+          'A platform for {domain} enthusiasts',
+          'A solution that improves {domain}',
+          'An educational resource for {domain}',
+          'A community focused on {domain}'
+        ];
+        
+        // Replace {domain} placeholder with user's specific interest
+        // Extract key terms from user input to personalize
+        const keyTerms = userInput.split(/[^\w\s]/).join(' ').split(/\s+/)
+          .filter(word => word.length > 2)
+          .slice(0, 3);
+        const domainPlaceholder = keyTerms.length > 0 ? keyTerms[0] : 'your area of interest';
+        
+        for (let i = 0; i < count && i < templates.length; i++) {
+          const template = templates[i];
+          const idea = template.replace(/\{domain\}/g, domainPlaceholder);
+          ideas.push(idea);
+        }
+        
+        return ideas;
+      }
+
+      generateResponse(userInput) {
+        // Analyze the user input
+        const analysis = this.analyzeInput(userInput);
+        
+        // Generate ideas
+        const ideas = this.generateIdeas(analysis, userInput);
+        
+        // Create a friendly response
+        const domainResponses = {
+          technology: "Technology is a great field with lots of opportunities! Here are some ideas based on your interest:",
+          sustainability: "Sustainability is such an important area! Here are some impactful ideas for you:",
+          education: "Education is fundamental to progress! Here are some learning-focused ideas:",
+          health: "Health and wellness are crucial! Here are some ideas in this space:",
+          creativity: "Creativity drives innovation! Here are some creative project ideas:",
+          business: "Business innovation can create real impact! Here are some entrepreneurial ideas:",
+          social_impact: "Social impact work is very meaningful! Here are some ways you can make a difference:",
+          art: "Art enriches our lives! Here are some creative art-related ideas:",
+          general: "That sounds interesting! Here are some ideas based on your input:"
+        };
+        
+        const responseText = domainResponses[analysis.domain] || domainResponses.general;
+        
+        return {
+          responseText: responseText,
+          ideas: ideas
+        };
+      }
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+      const messagesContainer = document.getElementById('messages-container');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+      const ideaEngine = new SimpleIdeaEngine();
+      let isProcessing = false;
+
+      // Function to add a message to the chat
+      function addMessage(text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'system'}`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = `avatar ${isUser ? 'user' : 'system'}`;
+        avatar.textContent = isUser ? 'YOU' : 'VI';
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble';
+        
+        // Process message text - split by newlines and create paragraphs
+        const textParts = text.split('\n');
+        textParts.forEach(part => {
+          if (part.trim() !== '') {
+            const p = document.createElement('p');
+            p.textContent = part;
+            bubble.appendChild(p);
+          }
+        });
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(bubble);
+        messagesContainer.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // Function to show typing indicator
+      function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message system';
+        typingDiv.id = 'typing-indicator';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar system';
+        avatar.textContent = 'VI';
+        
+        const indicator = document.createElement('div');
+        indicator.className = 'typing-indicator';
+        indicator.innerHTML = '<span>思考中</span><span>.</span><span>.</span><span>.</span>';
+        
+        typingDiv.appendChild(avatar);
+        typingDiv.appendChild(indicator);
+        messagesContainer.appendChild(typingDiv);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // Function to hide typing indicator
+      function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+
+      // Function to handle sending a message
+      function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message || isProcessing) return;
+        
+        // Add user message
+        addMessage(message, true);
+        userInput.value = '';
+        
+        // Show typing indicator
+        isProcessing = true;
+        showTypingIndicator();
+        sendButton.disabled = true;
+        
+        // Simulate AI processing
+        setTimeout(() => {
+          hideTypingIndicator();
+          
+          // Generate response using the idea engine
+          const response = ideaEngine.generateResponse(message);
+          
+          // Format the response message
+          let formattedResponse = response.responseText + "\n\n";
+          
+          // Add generated ideas
+          if (response.ideas.length > 0) {
+            formattedResponse += "💡 我为你想到了这些想法:\n";
+            response.ideas.forEach((idea, index) => {
+              formattedResponse += `${index + 1}. ${idea}\n`;
+            });
+          }
+          
+          // Add follow-up suggestion
+          formattedResponse += "\n期待听到你的想法!";
+          
+          // Add system response
+          addMessage(formattedResponse, false);
+          
+          isProcessing = false;
+          sendButton.disabled = false;
+        }, 1500);
+      }
+
+      // Event listeners
+      sendButton.addEventListener('click', sendMessage);
+      
+      userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+      
+      // Auto-resize textarea
+      userInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+      });
+    });
+  </script>
+</body>
+</html>
