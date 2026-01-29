@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vibe Idea - Professional Edition</title>
-  <!-- Cache buster: v5.0 -->
+  <title>Vibe Idea - Material Design Edition</title>
+  <!-- Cache buster: v6.0 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
+      /* Primary colors */
       --primary: #4f46e5;
       --primary-light: #818cf8;
       --primary-dark: #4338ca;
@@ -16,6 +17,8 @@
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
+      
+      /* Grayscale */
       --gray-50: #f9fafb;
       --gray-100: #f3f4f6;
       --gray-200: #e5e7eb;
@@ -26,13 +29,22 @@
       --gray-700: #374151;
       --gray-800: #1f2937;
       --gray-900: #111827;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      
+      /* Shadow layers */
+      --shadow-outer: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent);
+      --shadow-hover: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent);
+      --shadow-inner-top: inset 0 1px 0 rgba(255,255,255,0.2);
+      --shadow-inner-top-hover: inset 0 1px 0 rgba(255,255,255,0.25);
+      --shadow-inner-bottom: inset 0 -1px 0 rgba(0,0,0,0.1);
+      --shadow-inner-bottom-hover: inset 0 -1px 0 rgba(0,0,0,0.15);
+      
+      /* Radius values */
+      --radius-sm: 16px;
+      --radius-md: 20px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      
+      /* Transitions */
       --transition: all 0.2s ease;
     }
 
@@ -44,7 +56,10 @@
     }
 
     body {
-      background: var(--gray-50);
+      background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary) 10%, var(--gray-100)) 0%, 
+        color-mix(in srgb, var(--primary) 5%, var(--gray-50)) 50%, 
+        color-mix(in srgb, var(--primary) 2%, var(--gray-100)) 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -57,60 +72,92 @@
       width: 100%;
       max-width: 900px;
       height: 90vh;
-      background: white;
+      background: linear-gradient(
+        145deg, 
+        color-mix(in srgb, white 98%, var(--primary)) 0%, 
+        color-mix(in srgb, white 95%, var(--primary)) 50%, 
+        color-mix(in srgb, white 90%, var(--primary)) 100%
+      );
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-outer), var(--shadow-inner-top), var(--shadow-inner-bottom);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid var(--gray-200);
+      position: relative;
+    }
+
+    /* Subtle paper texture effect */
+    #root::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(125, 125, 125, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(125, 125, 125, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(125, 125, 125, 0.05) 0%, transparent 50%);
+      border-radius: var(--radius-lg);
+      pointer-events: none;
     }
 
     .app-container {
       display: flex;
       flex-direction: column;
       height: 100%;
+      position: relative;
+      z-index: 1;
     }
 
     .header {
-      background: white;
-      border-bottom: 1px solid var(--gray-200);
-      padding: 20px;
+      background: linear-gradient(
+        135deg, 
+        var(--primary) 0%, 
+        color-mix(in srgb, var(--primary) 85%, black) 50%, 
+        color-mix(in srgb, var(--primary) 70%, black) 100%
+      );
+      border-bottom: 1px solid color-mix(in srgb, var(--primary) 60%, white);
+      padding: 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: relative;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent);
     }
 
     .header-content {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 18px;
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-weight: 600;
-      font-size: 1.2rem;
-      color: var(--primary);
+      font-size: 1.3rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--primary);
-      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 80%, var(--primary)) 100%);
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
+      color: var(--primary);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), inset 0 1px 0 rgba(255,255,255,0.3);
     }
 
     .header-stats {
       display: flex;
-      gap: 20px;
+      gap: 24px;
       margin-left: auto;
     }
 
@@ -119,34 +166,36 @@
       flex-direction: column;
       align-items: center;
       font-size: 0.85rem;
-      color: var(--gray-600);
+      color: color-mix(in srgb, white 80%, var(--gray-200));
     }
 
     .stat-value {
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--gray-900);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .stat-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      opacity: 0.8;
     }
 
     .messages-container {
       flex: 1;
-      padding: 20px;
+      padding: 24px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      background: white;
+      gap: 18px;
+      background: transparent;
     }
 
     .message {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       max-width: 85%;
       animation: fadeIn 0.3s ease-out;
     }
@@ -166,45 +215,46 @@
     }
 
     .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: white;
+      box-shadow: 0 2px 6px color-mix(in srgb, black 15%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .avatar.user {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     }
 
     .avatar.system {
-      background: var(--gray-700);
+      background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-800) 100%);
     }
 
     .message-bubble {
-      padding: 14px 18px;
-      border-radius: 18px;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
       line-height: 1.5;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 2px 6px color-mix(in srgb, black 10%, transparent), inset 0 1px 0 rgba(255,255,255,0.1);
       position: relative;
       max-width: 100%;
     }
 
     .message.user .message-bubble {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
-      border-bottom-right-radius: 4px;
+      border-bottom-right-radius: 6px;
     }
 
     .message.system .message-bubble {
-      background: var(--gray-100);
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
       color: var(--gray-800);
-      border-bottom-left-radius: 4px;
+      border-bottom-left-radius: 6px;
     }
 
     .message-bubble p {
@@ -216,144 +266,163 @@
     }
 
     .idea-item {
-      background: white;
-      border: 1px solid var(--gray-200);
+      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 95%, var(--gray-100)) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
       border-radius: var(--radius-md);
-      padding: 12px 16px;
-      margin: 10px 0;
+      padding: 14px 18px;
+      margin: 12px 0;
       font-size: 0.95rem;
       position: relative;
       transition: var(--transition);
+      box-shadow: 0 2px 4px color-mix(in srgb, black 8%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .idea-item:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--primary-light);
+      box-shadow: var(--shadow-hover), var(--shadow-inner-top-hover), var(--shadow-inner-bottom-hover);
+      border-color: color-mix(in srgb, var(--primary-light) 50%, var(--gray-200));
+      transform: translateY(-1px);
     }
 
     .idea-actions {
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 14px;
     }
 
     .idea-btn {
-      background: var(--gray-100);
-      border: 1px solid var(--gray-200);
-      border-radius: 6px;
-      padding: 6px 12px;
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
       font-size: 0.8rem;
       cursor: pointer;
       transition: var(--transition);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
+      box-shadow: 0 2px 4px color-mix(in srgb, black 5%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .idea-btn:hover {
-      background: var(--gray-200);
+      background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-300) 100%);
+      border-color: color-mix(in srgb, var(--gray-300) 70%, white);
       transform: translateY(-1px);
+      box-shadow: 0 3px 6px color-mix(in srgb, black 10%, transparent), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    .idea-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px color-mix(in srgb, black 10%, transparent), inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
     .idea-btn.save-btn:hover {
-      background: #fef2f2;
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
       color: var(--danger);
       border-color: #fecaca;
     }
 
     .idea-btn.like-btn:hover {
-      background: #f0fdf4;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
       color: var(--success);
       border-color: #bbf7d0;
     }
 
     .idea-btn.explore-btn:hover {
-      background: #eff6ff;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
       color: var(--primary);
       border-color: #bfdbfe;
     }
 
     .input-area {
-      padding: 20px;
-      background: white;
-      border-top: 1px solid var(--gray-200);
+      padding: 24px;
+      background: linear-gradient(135deg, color-mix(in srgb, white 95%, var(--primary)) 0%, white 100%);
+      border-top: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     }
 
     .input-controls {
       display: flex;
-      gap: 10px;
+      gap: 12px;
     }
 
     .input-area textarea {
       flex: 1;
-      padding: 14px 18px;
-      border: 1px solid var(--gray-300);
-      border-radius: 12px;
+      padding: 16px 20px;
+      border: 1px solid color-mix(in srgb, var(--gray-300) 80%, white);
+      border-radius: var(--radius-md);
       resize: none;
-      height: 56px;
+      height: 60px;
       font-size: 1rem;
       outline: none;
       transition: var(--transition);
-      background: var(--gray-50);
+      background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+      box-shadow: inset 0 2px 4px color-mix(in srgb, black 3%, transparent);
     }
 
     .input-area textarea:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent), inset 0 2px 4px color-mix(in srgb, black 5%, transparent);
       background: white;
     }
 
     .send-button {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
       border: none;
-      border-radius: 12px;
-      width: 56px;
-      height: 56px;
+      border-radius: var(--radius-md);
+      width: 60px;
+      height: 60px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: var(--transition);
       font-size: 1.2rem;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1);
     }
 
     .send-button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
+      background: linear-gradient(135deg, var(--primary-dark) 0%, color-mix(in srgb, var(--primary-dark) 90%, black) 100%);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: var(--shadow-hover), var(--shadow-inner-top-hover), var(--shadow-inner-bottom-hover);
+    }
+
+    .send-button:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.05);
     }
 
     .send-button:disabled {
-      background: var(--gray-300);
+      background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-400) 100%);
       cursor: not-allowed;
       transform: none;
-      box-shadow: none;
+      box-shadow: 0 2px 4px color-mix(in srgb, black 15%, transparent), inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
     .typing-indicator {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      background: var(--gray-100);
-      border: 1px solid var(--gray-200);
-      border-radius: 18px;
+      gap: 10px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      border-radius: var(--radius-md);
       align-self: flex-start;
       font-size: 0.9rem;
       color: var(--gray-600);
+      box-shadow: 0 2px 4px color-mix(in srgb, black 8%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .saved-ideas-panel {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      margin-top: 12px;
-      box-shadow: var(--shadow-md);
+      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 95%, var(--gray-100)) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-top: 14px;
+      box-shadow: var(--shadow-outer), var(--shadow-inner-top), var(--shadow-inner-bottom);
       display: none;
     }
 
@@ -361,59 +430,69 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--gray-200);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
     }
 
     .panel-title {
       font-weight: 600;
       color: var(--gray-900);
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
 
     .saved-idea {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      margin-bottom: 10px;
+      background: linear-gradient(135deg, color-mix(in srgb, white 98%, var(--gray-50)) 0%, white 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 12px;
       font-size: 0.9rem;
       transition: var(--transition);
+      box-shadow: 0 2px 4px color-mix(in srgb, black 5%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .saved-idea:hover {
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 3px 6px color-mix(in srgb, black 10%, transparent), inset 0 1px 0 rgba(255,255,255,0.25);
       background: white;
+      border-color: color-mix(in srgb, var(--primary-light) 40%, var(--gray-200));
     }
 
     .idea-tag {
       display: inline-block;
-      background: var(--primary-light);
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
       color: white;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 20px;
       font-size: 0.7rem;
       margin-left: 8px;
       font-weight: 500;
+      box-shadow: 0 1px 2px color-mix(in srgb, black 15%, transparent);
     }
 
     .toggle-panel {
-      background: var(--gray-100);
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
-      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
       font-size: 0.85rem;
       cursor: pointer;
       transition: var(--transition);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: 0 2px 4px color-mix(in srgb, black 5%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .toggle-panel:hover {
-      background: var(--gray-200);
-      border-color: var(--gray-300);
+      background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-300) 100%);
+      border-color: color-mix(in srgb, var(--gray-300) 70%, white);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px color-mix(in srgb, black 10%, transparent), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    .toggle-panel:active {
+      transform: translateY(0);
     }
 
     /* Responsive design */
@@ -425,11 +504,21 @@
       }
 
       .header {
-        padding: 16px;
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+        border-radius: 0;
+      }
+
+      .header-content {
+        width: 100%;
+        justify-content: center;
       }
 
       .header-stats {
-        display: none;
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
       }
 
       .message {
@@ -437,7 +526,7 @@
       }
 
       .input-area {
-        padding: 16px;
+        padding: 20px;
       }
 
       .input-controls {
@@ -455,12 +544,24 @@
         padding: 10px;
       }
 
+      .header-stats {
+        gap: 15px;
+      }
+
+      .stat-value {
+        font-size: 1rem;
+      }
+
+      .stat-label {
+        font-size: 0.6rem;
+      }
+
       .message-bubble {
-        padding: 12px 16px;
+        padding: 14px 16px;
       }
 
       .idea-item {
-        padding: 10px 14px;
+        padding: 12px 14px;
       }
     }
   </style>
@@ -476,7 +577,7 @@
             </div>
             <span>Vibe Idea</span>
           </div>
-          <div class="tagline">AI创意伙伴</div>
+          <div class="tagline" style="color: color-mix(in srgb, white 90%, var(--gray-100)); opacity: 0.9;">AI创意伙伴</div>
         </div>
         <div class="header-stats">
           <div class="stat-item">
@@ -529,8 +630,8 @@
   </div>
 
   <script>
-    // Professional Idea Engine with Linear-style UI
-    class ProfessionalIdeaEngine {
+    // Material Design Idea Engine with Micro-Realistic Effects
+    class MaterialDesignIdeaEngine {
       constructor() {
         // Conversation history with enhanced metadata
         this.conversationHistory = [];
@@ -733,7 +834,7 @@
       }
 
       analyzeInput(userInput) {
-        console.log("Professional analyzing input:", userInput);
+        console.log("Material design analyzing input:", userInput);
         const input = userInput.toLowerCase();
         let scores = {};
         
@@ -920,7 +1021,7 @@
       }
 
       generateResponse(userInput) {
-        console.log("Generating professional response for:", userInput);
+        console.log("Generating material design response for:", userInput);
         
         // Analyze the user input
         const analysis = this.analyzeInput(userInput);
@@ -1044,7 +1145,7 @@
       const savedList = document.getElementById('saved-ideas-list');
       const closePanelBtn = document.getElementById('close-panel-btn');
       
-      const ideaEngine = new ProfessionalIdeaEngine();
+      const ideaEngine = new MaterialDesignIdeaEngine();
       let isProcessing = false;
 
       // Update stats display
@@ -1115,9 +1216,15 @@
                 // Visual feedback
                 const btn = document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`);
                 btn.innerHTML = '<i class="fas fa-check"></i> 已收藏';
-                btn.style.background = '#dcfce7';
+                btn.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
                 btn.style.color = '#16a34a';
                 btn.style.borderColor = '#86efac';
+                
+                // Animate the button
+                btn.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                  btn.style.transform = '';
+                }, 200);
                 
                 setTimeout(() => {
                   btn.innerHTML = '<i class="fas fa-bookmark"></i> 收藏';
@@ -1128,6 +1235,18 @@
                 
                 updateStatsDisplay();
               } else {
+                // Visual feedback for already saved
+                const btn = document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`);
+                btn.style.background = 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)';
+                btn.style.color = '#ef4444';
+                btn.style.borderColor = '#fecaca';
+                
+                setTimeout(() => {
+                  btn.style.background = '';
+                  btn.style.color = '';
+                  btn.style.borderColor = '';
+                }, 1000);
+                
                 alert('这个想法已经被收藏过了');
               }
             });
