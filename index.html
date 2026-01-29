@@ -518,6 +518,7 @@
         // Extract key terms from user input to personalize
         const keyTerms = userInput.split(/[^\w\s]/).join(' ').split(/\s+/)
           .filter(word => word.length > 2)
+          .filter(word => !['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'].includes(word.toLowerCase()))
           .slice(0, 3);
         const domainPlaceholder = keyTerms.length > 0 ? keyTerms[0] : 'your area of interest';
         
@@ -685,6 +686,11 @@
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 150) + 'px';
       });
+      
+      // Add initial welcome message if there are no messages
+      if (messagesContainer.children.length === 0) {
+        addMessage("你好！我是你的创意伙伴，今天想探索什么有趣的想法？", false);
+      }
     });
   </script>
 </body>
