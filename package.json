@@ -1,16 +1,31 @@
 {
   "name": "vibe-idea",
-  "version": "1.0.0",
-  "description": "Capturing and developing innovative concepts and creative ideas",
+  "version": "1.1.0",
+  "description": "AI-powered ideation engine for generating personalized, valuable ideas based on individual experiences and expertise",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "brainstorm": "node src/brainstorm.js",
+    "explore": "node src/brainstorm.js",
     "test": "jest"
   },
-  "keywords": ["idea", "innovation", "creativity", "inspiration", "ideation", "concepts"],
-  "author": "",
+  "keywords": [
+    "idea",
+    "innovation",
+    "creativity",
+    "inspiration",
+    "ideation",
+    "concepts",
+    "ai",
+    "personalized",
+    "brainstorming",
+    "innovation-engine"
+  ],
+  "author": "Vibe Idea Team",
   "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.6.1"
+  },
   "devDependencies": {
     "jest": "^29.0.0"
   }
