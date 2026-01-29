@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vibe Idea - Design System</title>
-  <!-- Cache buster: v8.0 -->
+  <title>Vibe Idea - Apple Animation Edition</title>
+  <!-- Cache buster: v9.0 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -18,9 +18,6 @@
       --warning: #f59e0b;
       --danger: #ef4444;
       --destructive: #ef4444;
-      --muted: #6b7280;
-      --background: #ffffff;
-      --foreground: #111827;
       
       /* Grayscale */
       --gray-50: #f9fafb;
@@ -39,10 +36,13 @@
       --radius-md: 20px;
       --radius-lg: 24px;
       --radius-xl: 32px;
-      --radius-full: 9999px;
       
-      /* Transitions */
-      --transition: all 0.2s ease;
+      /* Transitions - Apple-style spring physics */
+      --transition-snappy: cubic-bezier(0.4, 0, 0.2, 1) 0.2s; /* stiffness: 400, damping: 30 */
+      --transition-gentle: cubic-bezier(0.33, 0.66, 0.33, 1) 0.35s; /* stiffness: 300, damping: 35 */
+      --transition-bouncy: cubic-bezier(0.5, 0.75, 0.25, 1.25) 0.3s; /* stiffness: 500, damping: 25 */
+      --transition-smooth: cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s; /* stiffness: 200, damping: 40 */
+      --transition-inertia: cubic-bezier(0.34, 0.68, 0.29, 1.05) 0.25s; /* stiffness: 150, damping: 20 */
     }
 
     * {
@@ -58,38 +58,18 @@
         color-mix(in srgb, var(--primary) 5%, var(--gray-50)) 50%, 
         color-mix(in srgb, var(--primary) 2%, var(--gray-100)) 100%);
       min-height: 100vh;
-      padding: 40px 20px;
-      color: var(--foreground);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--gray-800);
+      overflow-x: hidden;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 12px;
-    }
-
-    .header p {
-      color: var(--gray-600);
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .section {
+    #root {
+      width: 100%;
+      max-width: 900px;
+      height: 90vh;
       background: linear-gradient(
         145deg, 
         color-mix(in srgb, white 98%, var(--primary)) 0%, 
@@ -100,773 +80,1667 @@
       box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
-      padding: 32px;
-      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
       position: relative;
+      transform-origin: center;
+      animation: fadeInUp 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) both;
     }
 
-    .section-title {
-      font-size: 1.5rem;
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Subtle paper texture effect */
+    #root::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(125, 125, 125, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(125, 125, 125, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(125, 125, 125, 0.05) 0%, transparent 50%);
+      border-radius: var(--radius-lg);
+      pointer-events: none;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      background: linear-gradient(
+        135deg, 
+        var(--primary) 0%, 
+        color-mix(in srgb, var(--primary) 85%, black) 50%, 
+        color-mix(in srgb, var(--primary) 70%, black) 100%
+      );
+      border-bottom: 1px solid color-mix(in srgb, var(--primary) 60%, white);
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2), 
+                  inset 0 -1px 0 rgba(0,0,0,0.1);
+      animation: slideInDown 0.4s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      animation: fadeIn 0.3s ease-out 0.1s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       font-weight: 600;
-      margin-bottom: 24px;
-      color: var(--gray-800);
+      font-size: 1.3rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
-    .component-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin-bottom: 32px;
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
-    /* BUTTON STYLES */
-    .btn {
-      display: inline-flex;
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 80%, var(--primary)) 100%);
+      border-radius: var(--radius-md);
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      white-space: nowrap;
-      font-size: 0.875rem;
-      font-weight: 500;
+      color: var(--primary);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.3);
+      transition: transform var(--transition-snappy), box-shadow var(--transition-gentle);
+    }
+
+    .logo-icon:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 40%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 24px;
+      margin-left: auto;
+      animation: fadeIn 0.3s ease-out 0.2s both;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.85rem;
+      color: color-mix(in srgb, white 80%, var(--gray-200));
+      animation: fadeInUp 0.3s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      animation-delay: calc(var(--delay-index) * 0.1s);
+    }
+
+    .stat-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+
+    .messages-container {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: transparent;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      gap: 14px;
+      max-width: 85%;
+      animation: messageSlideIn 0.4s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      opacity: 0;
+    }
+
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .message.appear {
+      opacity: 1;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+      animation-delay: 0.1s;
+    }
+
+    .message.system {
+      align-self: flex-start;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
       border-radius: var(--radius-md);
-      transition: var(--transition);
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: white;
+      box-shadow: 0 2px 6px color-mix(in srgb, black 15%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform var(--transition-snappy);
+    }
+
+    .avatar.user {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    }
+
+    .avatar.system {
+      background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-800) 100%);
+    }
+
+    .avatar:hover {
+      transform: scale(1.1);
+    }
+
+    .message-bubble {
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      line-height: 1.5;
+      box-shadow: 0 2px 6px color-mix(in srgb, black 10%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.1);
+      position: relative;
+      max-width: 100%;
+      transition: transform var(--transition-gentle), box-shadow var(--transition-gentle);
+    }
+
+    .message-bubble:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px color-mix(in srgb, black 15%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .message.system .message-bubble {
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+      color: var(--gray-800);
+      border-bottom-left-radius: 6px;
+    }
+
+    .message-bubble p {
+      margin: 0 0 8px 0;
+    }
+
+    .message-bubble p:last-child {
+      margin-bottom: 0;
+    }
+
+    .idea-item {
+      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 95%, var(--gray-100)) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin: 12px 0;
+      font-size: 0.95rem;
+      position: relative;
+      transition: all var(--transition-gentle);
+      box-shadow: 0 2px 4px color-mix(in srgb, black 8%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: cardSlideIn 0.35s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      animation-delay: 0.1s;
+    }
+
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .idea-item:hover {
+      box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.25), 
+                  inset 0 -1px 0 rgba(0,0,0,0.15);
+      border-color: color-mix(in srgb, var(--primary-light) 50%, var(--gray-200));
+      transform: translateY(-2px);
+    }
+
+    .idea-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      animation: fadeIn 0.25s ease-out 0.1s both;
+    }
+
+    /* BUTTON STYLES WITH APPLE-STYLE ANIMATIONS */
+    .idea-btn {
       border: none;
-      outline: none;
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all var(--transition-snappy);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 500;
+      color: white;
       position: relative;
       overflow: hidden;
-      text-decoration: none;
-      user-select: none;
-      touch-action: manipulation;
+      transform-origin: center;
     }
 
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    .btn:hover:not(:disabled) {
-      transform: scale(1.02);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-default {
+    .idea-btn.default {
       background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, black) 50%, color-mix(in srgb, var(--primary) 70%, black) 100%);
-      color: white;
       box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
     }
 
-    .btn-default:hover:not(:disabled) {
+    .idea-btn.default:hover {
       box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
+      transform: translateY(-2px) scale(1.02);
     }
 
-    .btn-primary {
+    .idea-btn.save-btn {
       background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, black) 50%, color-mix(in srgb, var(--primary) 70%, black) 100%);
-      color: white;
       box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
     }
 
-    .btn-primary:hover:not(:disabled) {
+    .idea-btn.save-btn:hover {
       box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
+      transform: translateY(-2px) scale(1.02);
     }
 
-    .btn-destructive {
-      background: linear-gradient(135deg, var(--destructive) 0%, color-mix(in srgb, var(--destructive) 85%, black) 50%, color-mix(in srgb, var(--destructive) 70%, black) 100%);
-      color: white;
-      box-shadow: 0 4px 12px color-mix(in srgb, var(--destructive) 35%, transparent), 
+    .idea-btn.like-btn {
+      background: linear-gradient(135deg, var(--success) 0%, color-mix(in srgb, var(--success) 85%, black) 50%, color-mix(in srgb, var(--success) 70%, black) 100%);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--success) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
     }
 
-    .btn-destructive:hover:not(:disabled) {
-      box-shadow: 0 6px 20px color-mix(in srgb, var(--destructive) 45%, transparent), 
+    .idea-btn.like-btn:hover {
+      box-shadow: 0 6px 20px color-mix(in srgb, var(--success) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
+      transform: translateY(-2px) scale(1.02);
     }
 
-    .btn-accent {
+    .idea-btn.explore-btn {
       background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 85%, black) 50%, color-mix(in srgb, var(--accent) 70%, black) 100%);
-      color: white;
       box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
     }
 
-    .btn-accent:hover:not(:disabled) {
+    .idea-btn.explore-btn:hover {
       box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
+      transform: translateY(-2px) scale(1.02);
     }
 
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--secondary) 0%, color-mix(in srgb, var(--secondary) 90%, black) 50%, color-mix(in srgb, var(--secondary) 80%, black) 100%);
-      color: var(--gray-800);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 
+    .idea-btn:active {
+      transform: translateY(0) scale(0.96);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.1), 
                   inset 0 -1px 0 rgba(0,0,0,0.05);
     }
 
-    .btn-secondary:hover:not(:disabled) {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2), 
-                  inset 0 1px 0 rgba(255,255,255,0.15), 
-                  inset 0 -1px 0 rgba(0,0,0,0.08);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--primary);
-      border: 1px solid color-mix(in srgb, var(--primary) 50%, var(--gray-200));
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1), 
-                  inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-
-    .btn-outline:hover:not(:disabled) {
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15), 
-                  inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--primary);
-      box-shadow: none;
-    }
-
-    .btn-ghost:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--primary) 10%, transparent);
-      box-shadow: none;
-    }
-
-    .btn-link {
-      background: transparent;
-      color: var(--primary);
-      text-decoration: underline;
-      box-shadow: none;
-    }
-
-    .btn-link:hover:not(:disabled) {
-      color: var(--primary-dark);
-      box-shadow: none;
-    }
-
-    .btn-sm {
-      height: 32px;
-      padding: 0 16px;
-      font-size: 0.75rem;
-      border-radius: var(--radius-sm);
-    }
-
-    .btn-default-size {
-      height: 36px;
-      padding: 0 20px;
-      font-size: 0.875rem;
-      border-radius: var(--radius-md);
-    }
-
-    .btn-md {
-      height: 40px;
-      padding: 0 24px;
-      font-size: 0.9375rem;
-      border-radius: var(--radius-md);
-    }
-
-    .btn-lg {
-      height: 48px;
-      padding: 0 40px;
-      font-size: 1rem;
-      border-radius: var(--radius-lg);
-    }
-
-    .btn-xl {
-      height: 56px;
-      padding: 0 48px;
-      font-size: 1.125rem;
-      border-radius: var(--radius-xl);
-    }
-
-    .btn-icon {
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      border-radius: var(--radius-md);
-    }
-
-    /* CARD COMPONENTS */
-    .card {
-      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 95%, var(--gray-100)) 100%);
-      border-radius: var(--radius-md);
-      box-shadow: 0 4px 12px color-mix(in srgb, black 8%, transparent), 
-                  inset 0 1px 0 rgba(255,255,255,0.2);
-      border: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
-      overflow: hidden;
-      transition: var(--transition);
-    }
-
-    .card:hover {
-      box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
-                  inset 0 1px 0 rgba(255,255,255,0.25), 
-                  inset 0 -1px 0 rgba(0,0,0,0.15);
-      transform: translateY(-2px);
-    }
-
-    .card-raised {
-      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 90%, var(--gray-50)) 100%);
-      border-radius: var(--radius-md);
-      box-shadow: 0 6px 16px color-mix(in srgb, black 12%, transparent), 
-                  inset 0 1px 0 rgba(255,255,255,0.25);
-      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
-      overflow: hidden;
-      transition: var(--transition);
-    }
-
-    .card-raised:hover {
-      box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 50%, transparent), 
-                  inset 0 1px 0 rgba(255,255,255,0.3), 
-                  inset 0 -1px 0 rgba(0,0,0,0.2);
-      transform: translateY(-3px);
-    }
-
-    .card-sunken {
-      background: linear-gradient(135deg, color-mix(in srgb, white 95%, var(--gray-100)) 0%, color-mix(in srgb, white 90%, var(--gray-200)) 100%);
-      border-radius: var(--radius-md);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 
-                  0 1px 2px rgba(0,0,0,0.05);
-      border: 1px solid color-mix(in srgb, var(--gray-300) 80%, white);
-      overflow: hidden;
-      transition: var(--transition);
-    }
-
-    .card-sunken:hover {
-      box-shadow: inset 0 3px 6px rgba(0,0,0,0.15), 
-                  0 2px 4px rgba(0,0,0,0.1);
-      transform: translateY(-1px);
-    }
-
-    .card-header {
-      padding: 24px 24px 16px 24px;
-      border-bottom: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
-    }
-
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--gray-900);
-      margin: 0;
-    }
-
-    .card-description {
-      font-size: 0.875rem;
-      color: var(--gray-600);
-      margin: 4px 0 0 0;
-    }
-
-    .card-content {
+    .input-area {
       padding: 24px;
+      background: linear-gradient(135deg, color-mix(in srgb, white 95%, var(--primary)) 0%, white 100%);
+      border-top: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      animation: slideInUp 0.4s cubic-bezier(0.33, 0.66, 0.33, 1) both;
     }
 
-    .card-footer {
-      padding: 16px 24px 24px 24px;
-      border-top: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* INPUT COMPONENTS */
-    .input {
-      background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+    .input-controls {
+      display: flex;
+      gap: 12px;
+      animation: fadeIn 0.3s ease-out 0.1s both;
+    }
+
+    .input-area textarea {
+      flex: 1;
+      padding: 16px 20px;
       border: 1px solid color-mix(in srgb, var(--gray-300) 80%, white);
       border-radius: var(--radius-md);
-      padding: 12px 16px;
-      font-size: 0.875rem;
+      resize: none;
+      height: 60px;
+      font-size: 1rem;
       outline: none;
-      transition: var(--transition);
+      transition: all var(--transition-gentle);
+      background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
       box-shadow: inset 0 2px 4px color-mix(in srgb, black 3%, transparent);
     }
 
-    .input:focus {
+    .input-area textarea:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent), 
                   inset 0 2px 4px color-mix(in srgb, black 5%, transparent);
       background: white;
+      transform: scale(1.01);
     }
 
-    .input:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .input-sunken {
-      background: linear-gradient(135deg, color-mix(in srgb, white 95%, var(--gray-100)) 0%, color-mix(in srgb, white 90%, var(--gray-200)) 100%);
-      border: 1px solid color-mix(in srgb, var(--gray-300) 80%, white);
+    .send-button {
+      background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, black) 50%, color-mix(in srgb, var(--primary) 70%, black) 100%);
+      color: white;
+      border: none;
       border-radius: var(--radius-md);
-      padding: 12px 16px;
-      font-size: 0.875rem;
-      outline: none;
-      transition: var(--transition);
-      box-shadow: inset 0 3px 6px rgba(0,0,0,0.1), 
-                  inset 0 1px 2px rgba(0,0,0,0.05);
-    }
-
-    .input-sunken:focus {
-      border-color: var(--primary);
-      box-shadow: inset 0 4px 8px rgba(0,0,0,0.15), 
-                  0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
-      background: color-mix(in srgb, white 98%, var(--primary));
-    }
-
-    /* BADGE COMPONENTS */
-    .badge {
-      display: inline-flex;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      border-radius: var(--radius-full);
-      white-space: nowrap;
-      transition: var(--transition);
+      transition: all var(--transition-snappy);
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2), 
+                  inset 0 -1px 0 rgba(0,0,0,0.1);
+      transform-origin: center;
     }
 
-    .badge-default {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      box-shadow: 0 2px 4px color-mix(in srgb, var(--primary) 30%, transparent);
+    .send-button:hover {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, color-mix(in srgb, var(--primary-dark) 85%, black) 50%, color-mix(in srgb, var(--primary-dark) 70%, black) 100%);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.25), 
+                  inset 0 -1px 0 rgba(0,0,0,0.15);
     }
 
-    .badge-secondary {
-      background: linear-gradient(135deg, var(--secondary) 0%, color-mix(in srgb, var(--secondary) 80%, black) 100%);
-      color: var(--gray-700);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    .send-button:active {
+      transform: translateY(0) scale(0.96);
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.1), 
+                  inset 0 -1px 0 rgba(0,0,0,0.05);
     }
 
-    .badge-destructive {
-      background: linear-gradient(135deg, var(--destructive) 0%, color-mix(in srgb, var(--destructive) 80%, black) 100%);
-      color: white;
-      box-shadow: 0 2px 4px color-mix(in srgb, var(--destructive) 30%, transparent);
-    }
-
-    .badge-success {
-      background: linear-gradient(135deg, var(--success) 0%, color-mix(in srgb, var(--success) 80%, black) 100%);
-      color: white;
-      box-shadow: 0 2px 4px color-mix(in srgb, var(--success) 30%, transparent);
-    }
-
-    .badge-warning {
-      background: linear-gradient(135deg, var(--warning) 0%, color-mix(in srgb, var(--warning) 80%, black) 100%);
-      color: var(--gray-900);
-      box-shadow: 0 2px 4px color-mix(in srgb, var(--warning) 30%, transparent);
-    }
-
-    .badge-accent {
-      background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 80%, black) 100%);
-      color: white;
-      box-shadow: 0 2px 4px color-mix(in srgb, var(--accent) 30%, transparent);
-    }
-
-    /* COMPONENT DEMO STYLES */
-    .component-demo {
-      background: white;
-      border-radius: var(--radius-md);
-      padding: 24px;
-      box-shadow: 0 2px 8px color-mix(in srgb, black 10%, transparent), 
+    .send-button:disabled {
+      background: linear-gradient(135deg, var(--gray-300) 0%, color-mix(in srgb, var(--gray-300) 85%, black) 50%, color-mix(in srgb, var(--gray-300) 70%, black) 100%);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 2px 4px color-mix(in srgb, black 15%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.1);
-      margin-bottom: 16px;
     }
 
-    .demo-row {
+    .typing-indicator {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 16px;
       align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      border-radius: var(--radius-md);
+      align-self: flex-start;
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      box-shadow: 0 2px 4px color-mix(in srgb, black 8%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: pulse 1.5s ease-in-out infinite;
     }
 
-    .demo-item {
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .saved-ideas-panel {
+      background: linear-gradient(135deg, white 0%, color-mix(in srgb, white 95%, var(--gray-100)) 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-top: 14px;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2), 
+                  inset 0 -1px 0 rgba(0,0,0,0.1);
+      display: none;
+      animation: modalSlideIn 0.35s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      transform-origin: top;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .saved-ideas-panel.show {
+      display: block;
+    }
+
+    .panel-header {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid color-mix(in srgb, var(--gray-200) 70%, white);
+    }
+
+    .panel-title {
+      font-weight: 600;
+      color: var(--gray-900);
+      font-size: 1.1rem;
+    }
+
+    .saved-idea {
+      background: linear-gradient(135deg, color-mix(in srgb, white 98%, var(--gray-50)) 0%, white 100%);
+      border: 1px solid color-mix(in srgb, var(--gray-200) 80%, white);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      transition: all var(--transition-gentle);
+      box-shadow: 0 2px 4px color-mix(in srgb, black 5%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: itemSlideIn 0.3s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      animation-fill-mode: backwards;
+    }
+
+    @keyframes itemSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .saved-idea:hover {
+      box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.25), 
+                  inset 0 -1px 0 rgba(0,0,0,0.15);
+      background: white;
+      border-color: color-mix(in srgb, var(--primary-light) 40%, var(--gray-200));
+      transform: translateY(-2px);
+    }
+
+    .idea-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-left: 8px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px color-mix(in srgb, black 15%, transparent);
+      animation: tagPop 0.3s cubic-bezier(0.5, 0.75, 0.25, 1.25) both;
+    }
+
+    @keyframes tagPop {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .toggle-panel {
+      background: linear-gradient(135deg, var(--secondary) 0%, color-mix(in srgb, var(--secondary) 90%, black) 50%, color-mix(in srgb, var(--secondary) 80%, black) 100%);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all var(--transition-gentle);
+      display: flex;
       align-items: center;
       gap: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 
+                  inset 0 1px 0 rgba(255,255,255,0.1), 
+                  inset 0 -1px 0 rgba(0,0,0,0.05);
+      color: var(--gray-800);
+      font-weight: 500;
+      transform-origin: center;
     }
 
-    .demo-label {
-      font-size: 0.75rem;
-      color: var(--gray-600);
-      text-align: center;
+    .toggle-panel:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2), 
+                  inset 0 1px 0 rgba(255,255,255,0.15), 
+                  inset 0 -1px 0 rgba(0,0,0,0.08);
+      transform: translateY(-2px) scale(1.02);
     }
 
-    /* FOOTER */
-    .footer {
-      text-align: center;
-      padding: 24px;
-      color: var(--gray-600);
-      font-size: 0.875rem;
+    .toggle-panel:active {
+      transform: translateY(0) scale(0.96);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1), 
+                  inset 0 1px 0 rgba(255,255,255,0.05), 
+                  inset 0 -1px 0 rgba(0,0,0,0.02);
     }
 
-    /* RESPONSIVE */
+    /* Staggered animations for multiple items */
+    .stagger-item {
+      animation: fadeInUp 0.3s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+    }
+
+    /* Responsive design */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      .logo-icon:hover {
+        transform: none;
+      }
+      
+      .avatar:hover {
+        transform: none;
+      }
+      
+      .message-bubble:hover {
+        transform: none;
+      }
+      
+      .idea-item:hover {
+        transform: none;
+      }
+      
+      .idea-btn:hover {
+        transform: none;
+      }
+      
+      .send-button:hover {
+        transform: none;
+      }
+      
+      .toggle-panel:hover {
+        transform: none;
+      }
+    }
+
     @media (max-width: 768px) {
-      .section {
-        padding: 24px 16px;
+      #root {
+        height: 100vh;
+        border-radius: 0;
+        max-width: 100%;
       }
-      
-      .component-grid {
-        grid-template-columns: 1fr;
+
+      .header {
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+        border-radius: 0;
       }
-      
-      .header h1 {
-        font-size: 2rem;
+
+      .header-content {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .header-stats {
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .message {
+        max-width: 90%;
+      }
+
+      .input-area {
+        padding: 20px;
+      }
+
+      .input-controls {
+        flex-direction: column;
+      }
+
+      .send-button {
+        width: 100%;
+        height: 48px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .header-stats {
+        gap: 15px;
+      }
+
+      .stat-value {
+        font-size: 1rem;
+      }
+
+      .stat-label {
+        font-size: 0.6rem;
+      }
+
+      .message-bubble {
+        padding: 14px 16px;
+      }
+
+      .idea-item {
+        padding: 12px 14px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Vibe Idea Design System</h1>
-      <p>Micro-realistic design components with gradient backgrounds, layered shadows, and enhanced interactivity</p>
-    </div>
-
-    <!-- BUTTONS SECTION -->
-    <div class="section">
-      <h2 class="section-title">Buttons</h2>
-      <div class="component-grid">
-        <div class="component-demo">
-          <h3>Button Variants</h3>
-          <div class="demo-row">
-            <div class="demo-item">
-              <button class="btn btn-default btn-default-size">Default</button>
-              <span class="demo-label">Default</span>
+  <div id="root">
+    <div class="app-container">
+      <div class="header">
+        <div class="header-content">
+          <div class="logo">
+            <div class="logo-icon">
+              <i class="fas fa-lightbulb"></i>
             </div>
-            <div class="demo-item">
-              <button class="btn btn-primary btn-default-size">Primary</button>
-              <span class="demo-label">Primary</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-destructive btn-default-size">Destructive</button>
-              <span class="demo-label">Destructive</span>
-            </div>
+            <span>Vibe Idea</span>
           </div>
-          <div class="demo-row">
-            <div class="demo-item">
-              <button class="btn btn-accent btn-default-size">Accent</button>
-              <span class="demo-label">Accent</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-secondary btn-default-size">Secondary</button>
-              <span class="demo-label">Secondary</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-outline btn-default-size">Outline</button>
-              <span class="demo-label">Outline</span>
-            </div>
-          </div>
-          <div class="demo-row">
-            <div class="demo-item">
-              <button class="btn btn-ghost btn-default-size">Ghost</button>
-              <span class="demo-label">Ghost</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-link btn-default-size">Link</button>
-              <span class="demo-label">Link</span>
-            </div>
-          </div>
+          <div class="tagline" style="color: color-mix(in srgb, white 90%, var(--gray-100)); opacity: 0.9;">AI创意伙伴</div>
         </div>
-
-        <div class="component-demo">
-          <h3>Button Sizes</h3>
-          <div class="demo-row">
-            <div class="demo-item">
-              <button class="btn btn-primary btn-sm">Small</button>
-              <span class="demo-label">SM (32px)</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-primary btn-default-size">Default</button>
-              <span class="demo-label">Default (36px)</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-primary btn-md">Medium</button>
-              <span class="demo-label">MD (40px)</span>
-            </div>
+        <div class="header-stats">
+          <div class="stat-item" style="--delay-index: 0;">
+            <div class="stat-value" id="idea-count">0</div>
+            <div class="stat-label">想法</div>
           </div>
-          <div class="demo-row">
-            <div class="demo-item">
-              <button class="btn btn-primary btn-lg">Large</button>
-              <span class="demo-label">LG (48px)</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-primary btn-xl">Extra Large</button>
-              <span class="demo-label">XL (56px)</span>
-            </div>
-            <div class="demo-item">
-              <button class="btn btn-primary btn-icon">
-                <i class="fas fa-cog"></i>
-              </button>
-              <span class="demo-label">Icon (40px)</span>
-            </div>
+          <div class="stat-item" style="--delay-index: 1;">
+            <div class="stat-value" id="saved-count">0</div>
+            <div class="stat-label">收藏</div>
+          </div>
+          <div class="stat-item" style="--delay-index: 2;">
+            <div class="stat-value" id="domain-count">0</div>
+            <div class="stat-label">领域</div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- CARDS SECTION -->
-    <div class="section">
-      <h2 class="section-title">Cards</h2>
-      <div class="component-grid">
-        <div class="component-demo">
-          <h3>Standard Card</h3>
-          <div class="card" style="width: 100%; max-width: 300px;">
-            <div class="card-header">
-              <h3 class="card-title">Card Title</h3>
-              <p class="card-description">This is a standard card component</p>
-            </div>
-            <div class="card-content">
-              <p>Card content goes here. This demonstrates the micro-realistic design with gradient backgrounds and layered shadows.</p>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-sm">Action</button>
-            </div>
+      
+      <div id="messages-container" class="messages-container">
+        <div class="message system appear">
+          <div class="avatar system">
+            <i class="fas fa-robot"></i>
           </div>
-        </div>
-
-        <div class="component-demo">
-          <h3>Raised Card</h3>
-          <div class="card-raised" style="width: 100%; max-width: 300px;">
-            <div class="card-header">
-              <h3 class="card-title">Raised Card</h3>
-              <p class="card-description">Elevated with stronger shadows</p>
-            </div>
-            <div class="card-content">
-              <p>This card uses outer projection for a more prominent appearance, perfect for featured content or important sections.</p>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-sm">Learn More</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="component-demo">
-          <h3>Sunken Card</h3>
-          <div class="card-sunken" style="width: 100%; max-width: 300px;">
-            <div class="card-header">
-              <h3 class="card-title">Sunken Card</h3>
-              <p class="card-description">Inset shadows for depth</p>
-            </div>
-            <div class="card-content">
-              <p>This card uses inset shadows to create an embedded appearance, ideal for grouped content or form sections.</p>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-secondary btn-sm">Details</button>
-            </div>
+          <div class="message-bubble">
+            <p>你好！我是你的AI创意伙伴，今天想探索什么有趣的想法？</p>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- INPUTS SECTION -->
-    <div class="section">
-      <h2 class="section-title">Inputs</h2>
-      <div class="component-grid">
-        <div class="component-demo">
-          <h3>Standard Input</h3>
-          <div style="width: 100%; max-width: 300px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Standard Input</label>
-            <input type="text" class="input" placeholder="Enter text here..." />
-          </div>
-          <div style="margin-top: 16px; width: 100%; max-width: 300px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">With Icon</label>
-            <div style="display: flex; align-items: center;">
-              <i class="fas fa-search" style="margin-left: 12px; margin-right: 8px; color: var(--gray-500);"></i>
-              <input type="text" class="input" placeholder="Search..." style="flex: 1;" />
-            </div>
-          </div>
+      
+      <div class="input-area">
+        <div class="input-controls">
+          <textarea id="user-input" placeholder="分享你的兴趣或问题..."></textarea>
+          <button id="send-button" class="send-button">
+            <i class="fas fa-paper-plane"></i>
+          </button>
         </div>
-
-        <div class="component-demo">
-          <h3>Sunken Input</h3>
-          <div style="width: 100%; max-width: 300px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Sunken Input</label>
-            <input type="text" class="input-sunken" placeholder="Inset shadow effect..." />
+        <button id="show-saved-btn" class="toggle-panel">
+          <i class="fas fa-bookmark"></i> 查看收藏的想法
+        </button>
+        <div id="saved-ideas-panel" class="saved-ideas-panel">
+          <div class="panel-header">
+            <div class="panel-title">收藏的想法</div>
+            <button id="close-panel-btn" class="toggle-panel">
+              <i class="fas fa-times"></i>
+            </button>
           </div>
-          <div style="margin-top: 16px; width: 100%; max-width: 300px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Password</label>
-            <div style="display: flex; align-items: center;">
-              <i class="fas fa-lock" style="margin-left: 12px; margin-right: 8px; color: var(--gray-500);"></i>
-              <input type="password" class="input-sunken" placeholder="Enter password..." style="flex: 1;" />
-              <i class="fas fa-eye" style="margin-right: 12px; margin-left: 8px; color: var(--gray-500); cursor: pointer;"></i>
-            </div>
-          </div>
+          <div id="saved-ideas-list"></div>
         </div>
       </div>
-    </div>
-
-    <!-- BADGES SECTION -->
-    <div class="section">
-      <h2 class="section-title">Badges</h2>
-      <div class="component-grid">
-        <div class="component-demo">
-          <h3>Badge Variants</h3>
-          <div class="demo-row">
-            <div class="demo-item">
-              <span class="badge badge-default">Default</span>
-              <span class="demo-label">Primary</span>
-            </div>
-            <div class="demo-item">
-              <span class="badge badge-secondary">Secondary</span>
-              <span class="demo-label">Secondary</span>
-            </div>
-            <div class="demo-item">
-              <span class="badge badge-destructive">Destructive</span>
-              <span class="demo-label">Destructive</span>
-            </div>
-          </div>
-          <div class="demo-row">
-            <div class="demo-item">
-              <span class="badge badge-success">Success</span>
-              <span class="demo-label">Success</span>
-            </div>
-            <div class="demo-item">
-              <span class="badge badge-warning">Warning</span>
-              <span class="demo-label">Warning</span>
-            </div>
-            <div class="demo-item">
-              <span class="badge badge-accent">Accent</span>
-              <span class="demo-label">Accent</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="component-demo">
-          <h3>Badge Usage Examples</h3>
-          <div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="badge badge-success">New</span>
-              <span>Feature Update</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="badge badge-warning">Beta</span>
-              <span>Experimental Feature</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="badge badge-destructive">Hot</span>
-              <span>Trending Now</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="badge badge-accent">Pro</span>
-              <span>Premium Content</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="badge badge-secondary">Info</span>
-              <span>Informational</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- COMBINED COMPONENTS SECTION -->
-    <div class="section">
-      <h2 class="section-title">Combined Components</h2>
-      <div class="component-grid">
-        <div class="component-demo">
-          <h3>Card with Form Elements</h3>
-          <div class="card-raised" style="width: 100%; max-width: 400px;">
-            <div class="card-header">
-              <h3 class="card-title">Contact Form</h3>
-              <p class="card-description">Example with multiple components</p>
-            </div>
-            <div class="card-content">
-              <div style="display: flex; flex-direction: column; gap: 16px;">
-                <div>
-                  <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Name</label>
-                  <input type="text" class="input-sunken" placeholder="Enter your name" />
-                </div>
-                <div>
-                  <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Email</label>
-                  <input type="email" class="input-sunken" placeholder="Enter your email" />
-                </div>
-                <div>
-                  <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Subject</label>
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="text" class="input" placeholder="Choose subject" style="flex: 1;" />
-                    <span class="badge badge-primary">Required</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <div style="display: flex; gap: 12px;">
-                <button class="btn btn-secondary btn-default-size">Cancel</button>
-                <button class="btn btn-primary btn-default-size">Submit</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="component-demo">
-          <h3>Interactive Component Demo</h3>
-          <div class="card" style="width: 100%; max-width: 400px;">
-            <div class="card-header">
-              <h3 class="card-title">Task Manager</h3>
-              <p class="card-description">Example with various interactive elements</p>
-            </div>
-            <div class="card-content">
-              <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: color-mix(in srgb, var(--primary) 5%, transparent); border-radius: var(--radius-sm);">
-                  <span>Complete project design</span>
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="badge badge-success">Done</span>
-                    <button class="btn btn-ghost btn-icon">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: color-mix(in srgb, var(--warning) 5%, transparent); border-radius: var(--radius-sm);">
-                  <span>Review user feedback</span>
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="badge badge-warning">Pending</span>
-                    <button class="btn btn-ghost btn-icon">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: color-mix(in srgb, var(--destructive) 5%, transparent); border-radius: var(--radius-sm);">
-                  <span>Fix critical bug</span>
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="badge badge-destructive">Urgent</span>
-                    <button class="btn btn-ghost btn-icon">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <div style="display: flex; gap: 12px;">
-                <button class="btn btn-outline btn-default-size">
-                  <i class="fas fa-plus"></i> Add Task
-                </button>
-                <button class="btn btn-primary btn-default-size">
-                  <i class="fas fa-sync"></i> Refresh
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p>Vibe Idea Design System • Micro-realistic components with gradient backgrounds and layered shadows</p>
-      <p>Using CSS variables + color-mix for dynamic color relationships</p>
     </div>
   </div>
+
+  <script>
+    // Apple Animation Idea Engine with Spring Physics
+    class AppleAnimationIdeaEngine {
+      constructor() {
+        // Conversation history with enhanced metadata
+        this.conversationHistory = [];
+        
+        // User preferences and learning
+        this.userPreferences = {
+          preferredDomains: {},
+          favoriteTypes: {},
+          engagementPatterns: {}
+        };
+        
+        // Saved/liked ideas
+        this.savedIdeas = [];
+        
+        // Statistics
+        this.stats = {
+          totalIdeas: 0,
+          savedIdeas: 0,
+          exploredDomains: new Set(),
+          conversationTurns: 0
+        };
+        
+        this.knowledgeDomains = [
+          'technology', 'sustainability', 'education', 'health', 
+          'creativity', 'business', 'social_impact', 'art'
+        ];
+        
+        this.ideaTemplates = {
+          technology: [
+            'AI-powered solution to optimize {domain}',
+            'Blockchain-based platform for {domain}',
+            'IoT system to monitor and improve {domain}',
+            'Mobile app to help users with {domain}',
+            'AR/VR experience for {domain} education',
+            'Machine learning model to predict {domain} trends',
+            'Cybersecurity framework for {domain} systems',
+            'Decentralized application for {domain}',
+            'Voice interface for {domain} access',
+            'Edge computing solution for {domain}'
+          ],
+          sustainability: [
+            'Circular economy approach to {domain}',
+            'Zero-waste solution for {domain}',
+            'Renewable energy application in {domain}',
+            'Community-driven {domain} initiative',
+            'Upcycling project focused on {domain}',
+            'Carbon footprint tracker for {domain} activities',
+            'Water conservation method in {domain} processes',
+            'Biodiversity monitoring system for {domain}',
+            'Sustainable supply chain for {domain}',
+            'Green transportation solution for {domain}'
+          ],
+          education: [
+            'Interactive learning platform for {domain}',
+            'Gamified approach to teaching {domain}',
+            'Peer-to-peer knowledge sharing in {domain}',
+            'Virtual reality classroom for {domain}',
+            'AI tutor specializing in {domain}',
+            'Open-source curriculum for {domain} skills',
+            'Cross-cultural exchange program for {domain} learners',
+            'Project-based learning for {domain}',
+            'Skill assessment platform for {domain}',
+            'Educational content creator tool for {domain}'
+          ],
+          health: [
+            'Preventive care approach to {domain}',
+            'Mental wellness program for {domain}',
+            'Fitness tracking solution for {domain}',
+            'Telemedicine platform for {domain}',
+            'Nutrition-focused app for {domain}',
+            'Community support group for {domain} challenges',
+            'Wearable device to monitor {domain} metrics',
+            'Personalized therapy approach for {domain}',
+            'Health data analytics for {domain}',
+            'Accessibility solution for {domain} patients'
+          ],
+          creativity: [
+            'Collaborative workspace for {domain} creators',
+            'AI-assisted {domain} generation tool',
+            'Cross-media storytelling for {domain}',
+            'Creative challenge platform for {domain}',
+            'Digital archive for {domain} works',
+            'Hybrid physical-digital {domain} studio',
+            'NFT marketplace for {domain} artists',
+            'Creative collaboration tool for {domain}',
+            'Immersive {domain} experience',
+            'Generative {domain} algorithm'
+          ],
+          business: [
+            'Subscription model for {domain} services',
+            'Marketplace connecting {domain} providers',
+            'Freemium tool for {domain} professionals',
+            'Consulting service specializing in {domain}',
+            'White-label solution for {domain} businesses',
+            'Micro-investment platform for {domain} startups',
+            'Remote collaboration suite for {domain} teams',
+            'Business intelligence for {domain} sector',
+            'Customer success platform for {domain}',
+            'Revenue optimization for {domain} companies'
+          ],
+          social_impact: [
+            'Non-profit organization addressing {domain}',
+            'Crowdfunding platform for {domain} projects',
+            'Volunteer network focused on {domain}',
+            'Awareness campaign for {domain} issues',
+            'Policy advocacy around {domain}',
+            'Global movement for {domain} rights',
+            'Local community hub for {domain} initiatives',
+            'Impact measurement tool for {domain}',
+            'Social entrepreneurship incubator for {domain}',
+            'Grassroots organizing platform for {domain}'
+          ],
+          art: [
+            'Interactive {domain} installation',
+            'Digital gallery for {domain} artists',
+            'Collaborative {domain} project platform',
+            '{domain} workshop series',
+            'Augmented reality {domain} experience',
+            'Cross-disciplinary {domain} fusion project',
+            'Public {domain} art initiative',
+            'Artist residency program for {domain}',
+            'Art market platform for {domain}',
+            'Cultural preservation project for {domain}'
+          ]
+        };
+        
+        this.followupTemplates = {
+          exploration: [
+            "你希望这个想法解决什么具体问题？",
+            "你认为这个想法面临的最大挑战是什么？",
+            "你觉得谁会从这个想法中受益最多？",
+            "你想象中最理想的实现方式是什么样的？"
+          ],
+          refinement: [
+            "你觉得这个想法的哪个方面最吸引你？",
+            "有没有什么因素可能会阻碍这个想法的实现？",
+            "你希望这个想法对社会产生什么样的影响？",
+            "你愿意为此投入多少时间和精力？"
+          ],
+          inspiration: [
+            "你最近在{domain}领域遇到过什么有趣的挑战吗？",
+            "你认为{domain}领域目前最需要什么样的创新？",
+            "你理想中的{domain}解决方案是什么样的？",
+            "有没有什么{domain}相关的经历启发了你？"
+          ],
+          deep_dive: [
+            "你能详细描述一下你希望实现的具体效果吗？",
+            "你考虑过这个想法的长期影响吗？",
+            "有没有其他领域可以借鉴类似的方法？",
+            "你觉得这个想法如何适应未来的变化？"
+          ]
+        };
+      }
+
+      // Add message to conversation history with metadata
+      addToHistory(message, isUser, metadata = {}) {
+        this.conversationHistory.push({
+          text: message,
+          isUser: isUser,
+          timestamp: Date.now(),
+          ...metadata
+        });
+        
+        // Keep only last 20 messages to avoid memory bloat
+        if (this.conversationHistory.length > 20) {
+          this.conversationHistory = this.conversationHistory.slice(-20);
+        }
+        
+        this.stats.conversationTurns++;
+      }
+
+      // Learn from user interactions
+      learnFromInteraction(userInput, response) {
+        // Extract domains mentioned in user input
+        const inputLower = userInput.toLowerCase();
+        for (const domain of this.knowledgeDomains) {
+          if (inputLower.includes(domain.replace('_', ' '))) {
+            this.userPreferences.preferredDomains[domain] = (this.userPreferences.preferredDomains[domain] || 0) + 1;
+          }
+        }
+        
+        // Track engagement patterns
+        this.userPreferences.engagementPatterns[this.stats.conversationTurns % 5] = 
+          (this.userPreferences.engagementPatterns[this.stats.conversationTurns % 5] || 0) + 1;
+      }
+
+      // Get user's preferred domain based on history
+      getPreferredDomain() {
+        let maxCount = 0;
+        let preferredDomain = 'general';
+        
+        for (const [domain, count] of Object.entries(this.userPreferences.preferredDomains)) {
+          if (count > maxCount) {
+            maxCount = count;
+            preferredDomain = domain;
+          }
+        }
+        
+        return preferredDomain;
+      }
+
+      analyzeInput(userInput) {
+        console.log("Apple animation analyzing input:", userInput);
+        const input = userInput.toLowerCase();
+        let scores = {};
+        
+        // Score each domain based on keyword matches
+        for (const domain of this.knowledgeDomains) {
+          let score = 0;
+          
+          // General keywords that appear across domains
+          if (input.includes('app') || input.includes('application')) score += 2;
+          if (input.includes('platform') || input.includes('system')) score += 2;
+          if (input.includes('solution') || input.includes('solve')) score += 2;
+          if (input.includes('help') || input.includes('assist')) score += 1;
+          if (input.includes('community') || input.includes('people')) score += 1;
+          if (input.includes('learn') || input.includes('education')) score += 1;
+          
+          // Domain-specific keywords
+          switch(domain) {
+            case 'technology':
+              if (input.includes('ai') || input.includes('artificial intelligence')) score += 3;
+              if (input.includes('blockchain') || input.includes('crypto')) score += 3;
+              if (input.includes('mobile') || input.includes('app')) score += 2;
+              if (input.includes('iot') || input.includes('internet of things')) score += 3;
+              if (input.includes('data') || input.includes('algorithm')) score += 2;
+              break;
+              
+            case 'sustainability':
+              if (input.includes('sustainable') || input.includes('eco')) score += 3;
+              if (input.includes('environment') || input.includes('green')) score += 3;
+              if (input.includes('waste') || input.includes('zero')) score += 2;
+              if (input.includes('energy') || input.includes('renewable')) score += 2;
+              if (input.includes('circular') || input.includes('reuse')) score += 2;
+              break;
+              
+            case 'education':
+              if (input.includes('learn') || input.includes('teach')) score += 3;
+              if (input.includes('school') || input.includes('student')) score += 2;
+              if (input.includes('course') || input.includes('training')) score += 2;
+              if (input.includes('knowledge') || input.includes('skill')) score += 2;
+              if (input.includes('classroom') || input.includes('study')) score += 2;
+              break;
+              
+            case 'health':
+              if (input.includes('health') || input.includes('wellness')) score += 3;
+              if (input.includes('fitness') || input.includes('exercise')) score += 2;
+              if (input.includes('mental') || input.includes('therapy')) score += 2;
+              if (input.includes('nutrition') || input.includes('diet')) score += 2;
+              if (input.includes('medical') || input.includes('patient')) score += 2;
+              break;
+              
+            case 'creativity':
+              if (input.includes('creative') || input.includes('artistic')) score += 3;
+              if (input.includes('design') || input.includes('creative')) score += 2;
+              if (input.includes('music') || input.includes('visual')) score += 2;
+              if (input.includes('writing') || input.includes('story')) score += 2;
+              if (input.includes('maker') || input.includes('craft')) score += 2;
+              break;
+              
+            case 'business':
+              if (input.includes('business') || input.includes('startup')) score += 3;
+              if (input.includes('market') || input.includes('customer')) score += 2;
+              if (input.includes('revenue') || input.includes('profit')) score += 2;
+              if (input.includes('service') || input.includes('product')) score += 2;
+              if (input.includes('entrepreneur') || input.includes('venture')) score += 2;
+              break;
+              
+            case 'social_impact':
+              if (input.includes('impact') || input.includes('change')) score += 3;
+              if (input.includes('community') || input.includes('social')) score += 2;
+              if (input.includes('nonprofit') || input.includes('charity')) score += 2;
+              if (input.includes('advocacy') || input.includes('awareness')) score += 2;
+              if (input.includes('equity') || input.includes('accessibility')) score += 2;
+              break;
+              
+            case 'art':
+              if (input.includes('art') || input.includes('artist')) score += 3;
+              if (input.includes('gallery') || input.includes('exhibition')) score += 2;
+              if (input.includes('creative') || input.includes('expression')) score += 2;
+              if (input.includes('culture') || input.includes('heritage')) score += 2;
+              if (input.includes('performance') || input.includes('theater')) score += 2;
+              break;
+          }
+          
+          scores[domain] = score;
+        }
+        
+        console.log("Scores:", scores);
+        
+        // Find the domain with the highest score
+        let bestDomain = 'general';
+        let bestScore = 0;
+        
+        for (const [domain, score] of Object.entries(scores)) {
+          if (score > bestScore) {
+            bestScore = score;
+            bestDomain = domain;
+          }
+        }
+        
+        // If no strong match, default to user's preferred domain or general
+        if (bestScore === 0) {
+          bestDomain = this.getPreferredDomain();
+        }
+        
+        // Update stats
+        if (bestDomain !== 'general') {
+          this.stats.exploredDomains.add(bestDomain);
+        }
+        
+        console.log("Best domain:", bestDomain, "with score:", bestScore);
+        
+        return {
+          domain: bestDomain,
+          confidence: bestScore > 0 ? Math.min(bestScore / 10, 1) : 0
+        };
+      }
+
+      generateIdeas(inputAnalysis, userInput, count = 2) {
+        const { domain } = inputAnalysis;
+        console.log("Generating ideas for domain:", domain);
+        const ideas = [];
+        
+        // Get templates for the identified domain
+        const templates = this.ideaTemplates[domain] || [
+          'An innovative approach to {domain}',
+          'A platform for {domain} enthusiasts',
+          'A solution that improves {domain}',
+          'An educational resource for {domain}',
+          'A community focused on {domain}',
+          'A research initiative exploring {domain}',
+          'A toolkit for {domain} practitioners',
+          'A collaborative project for {domain}',
+          'An experimental approach to {domain}',
+          'A cross-domain solution involving {domain}'
+        ];
+        
+        // Replace {domain} placeholder with user's specific interest
+        // Extract key terms from user input to personalize
+        const keyTerms = userInput.split(/[^\w\s]/).join(' ').split(/\s+/)
+          .filter(word => word.length > 2)
+          .filter(word => !['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'].includes(word.toLowerCase()))
+          .slice(0, 3);
+        const domainPlaceholder = keyTerms.length > 0 ? keyTerms[0] : 'your area of interest';
+        
+        console.log("Key terms:", keyTerms, "Domain placeholder:", domainPlaceholder);
+        
+        for (let i = 0; i < count && i < templates.length; i++) {
+          // Select a template that hasn't been used recently
+          const availableTemplates = templates.filter(template => 
+            !this.conversationHistory.some(msg => 
+              msg.text && msg.text.includes(template.replace(/\{domain\}/g, domainPlaceholder)))
+          );
+          
+          const template = availableTemplates.length > 0 ? 
+            availableTemplates[i % availableTemplates.length] : 
+            templates[i % templates.length];
+            
+          const idea = template.replace(/\{domain\}/g, domainPlaceholder);
+          
+          // Create idea object with metadata
+          const ideaObj = {
+            id: Date.now() + i,
+            text: idea,
+            domain: domain,
+            timestamp: Date.now(),
+            originalTemplate: template
+          };
+          
+          ideas.push(ideaObj);
+          console.log(`Generated idea ${i+1}:`, idea);
+        }
+        
+        // Update stats
+        this.stats.totalIdeas += ideas.length;
+        
+        return ideas;
+      }
+
+      generateFollowupQuestion(contextType = 'exploration', domain = 'general') {
+        const templates = this.followupTemplates[contextType] || this.followupTemplates.exploration;
+        const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+        
+        // Replace {domain} placeholder if present
+        return randomTemplate.replace(/\{domain\}/g, domain);
+      }
+
+      generateResponse(userInput) {
+        console.log("Generating apple animation response for:", userInput);
+        
+        // Analyze the user input
+        const analysis = this.analyzeInput(userInput);
+        
+        // Generate ideas
+        const ideas = this.generateIdeas(analysis, userInput);
+        
+        // Determine response type based on context and conversation history
+        let responseText;
+        const conversationDepth = this.conversationHistory.filter(msg => msg.isUser).length;
+        
+        if (conversationDepth <= 1) {
+          // First interaction - use welcoming response
+          const domainResponses = {
+            technology: "技术是一个充满机遇的领域！我识别出您对科技的兴趣。基于您的输入，这里有一些想法：",
+            sustainability: "可持续发展是一个重要的领域！我看出您关注环境影响。这里有一些有影响力的想法供您参考：",
+            education: "教育是进步的基础！我注意到您在思考学习相关的话题。这里有一些学习导向的想法：",
+            health: "健康和福祉至关重要！我看到您对健康话题感兴趣。这里有一些相关的思路：",
+            creativity: "创造力推动创新！我可以看出您有艺术方面的兴趣。这里有一些创意项目的想法：",
+            business: "商业创新可以产生真正的影响力！我注意到创业思维。这里有一些商业导向的想法：",
+            social_impact: "社会影响力工作非常有意义！我看到您关心如何产生影响。这里有一些您可以产生影响的方式：",
+            art: "艺术丰富我们的生活！我可以看出您对创意表达有兴趣。这里有一些艺术相关的想法：",
+            general: "听起来很有趣！我分析了您的输入，这里有一些基于您兴趣的想法："
+          };
+          
+          responseText = domainResponses[analysis.domain] || domainResponses.general;
+        } else if (conversationDepth <= 3) {
+          // Early follow-up - use more contextual response
+          const followupResponses = {
+            technology: "关于技术的有趣跟进！让我扩展一些可能性：",
+            sustainability: "感谢您进一步阐述可持续性！这里有更多有针对性的想法：",
+            education: "很高兴听到更多关于教育的信息！我有一些额外的想法：",
+            health: "我很欣赏您分享更多关于健康主题的信息！请考虑这些方法：",
+            creativity: "热爱您持续的创意兴趣！这里有更多的创意方向：",
+            business: "感谢您深入探讨商业概念！这里有扩展的想法：",
+            social_impact: "很棒，您继续思考社会影响！更多想法：",
+            art: "更多艺术灵感！这里有额外的创意可能性：",
+            general: "感谢您分享更多详情！基于我们的对话，这里有一些经过深思熟虑的想法："
+          };
+          
+          responseText = followupResponses[analysis.domain] || followupResponses.general;
+        } else {
+          // Deeper conversation - use insight-oriented response
+          const insightResponses = {
+            technology: "基于我们之前的讨论，我对技术领域有了更深的见解。这里有一些更有针对性的想法：",
+            sustainability: "经过我们深入的对话，我在可持续性方面有了新的视角。这里有更精细的想法：",
+            education: "通过我们的交流，我对教育有了更好的理解。这里有一些更具体的建议：",
+            health: "我们对话的深度让我对健康领域有了更细致的认识。这里有一些深入的想法：",
+            creativity: "我们的创意交流激发了这些更富想象力的想法：",
+            business: "基于我们多次的商业讨论，我提炼出这些更精准的商业想法：",
+            social_impact: "通过我们持续的社会影响对话，我提出了这些更有深度的想法：",
+            art: "我们艺术话题的深入交流启发了这些更精致的创意：",
+            general: "通过我们深入的对话，我为您提炼出这些更符合您兴趣的想法："
+          };
+          
+          responseText = insightResponses[analysis.domain] || insightResponses.general;
+        }
+        
+        // Generate a relevant follow-up question based on conversation depth
+        let followupContext;
+        if (conversationDepth <= 1) followupContext = 'inspiration';
+        else if (conversationDepth <= 3) followupContext = 'refinement';
+        else followupContext = 'deep_dive';
+        
+        const followupQuestion = this.generateFollowupQuestion(followupContext, analysis.domain);
+        
+        console.log("Response text:", responseText);
+        
+        return {
+          responseText: responseText,
+          ideas: ideas,
+          followupQuestion: followupQuestion,
+          analysis: analysis
+        };
+      }
+      
+      // Save an idea to user's collection
+      saveIdea(idea) {
+        // Check if idea is already saved
+        const alreadySaved = this.savedIdeas.some(saved => saved.id === idea.id);
+        if (!alreadySaved) {
+          this.savedIdeas.push({...idea});
+          this.stats.savedIdeas = this.savedIdeas.length;
+          return true;
+        }
+        return false;
+      }
+      
+      // Remove a saved idea
+      removeSavedIdea(ideaId) {
+        this.savedIdeas = this.savedIdeas.filter(idea => idea.id !== ideaId);
+        this.stats.savedIdeas = this.savedIdeas.length;
+      }
+      
+      // Get all saved ideas
+      getSavedIdeas() {
+        return this.savedIdeas;
+      }
+      
+      // Get statistics
+      getStats() {
+        return {
+          totalIdeas: this.stats.totalIdeas,
+          savedIdeas: this.stats.savedIdeas,
+          exploredDomains: this.stats.exploredDomains.size,
+          conversationTurns: this.stats.conversationTurns
+        };
+      }
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+      const messagesContainer = document.getElementById('messages-container');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+      const ideaCountEl = document.getElementById('idea-count');
+      const savedCountEl = document.getElementById('saved-count');
+      const domainCountEl = document.getElementById('domain-count');
+      const showSavedBtn = document.getElementById('show-saved-btn');
+      const savedPanel = document.getElementById('saved-ideas-panel');
+      const savedList = document.getElementById('saved-ideas-list');
+      const closePanelBtn = document.getElementById('close-panel-btn');
+      
+      const ideaEngine = new AppleAnimationIdeaEngine();
+      let isProcessing = false;
+
+      // Update stats display
+      function updateStatsDisplay() {
+        const stats = ideaEngine.getStats();
+        ideaCountEl.textContent = stats.totalIdeas;
+        savedCountEl.textContent = stats.savedIdeas;
+        domainCountEl.textContent = stats.exploredDomains;
+      }
+
+      // Function to add a message to the chat
+      function addMessage(text, isUser, ideaData = null) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'system'}`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = `avatar ${isUser ? 'user' : 'system'}`;
+        avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble';
+        
+        // Process message text - split by newlines and create paragraphs
+        const textParts = text.split('\n');
+        textParts.forEach(part => {
+          if (part.trim() !== '') {
+            const p = document.createElement('p');
+            p.textContent = part;
+            bubble.appendChild(p);
+          }
+        });
+        
+        // If this is a system message with ideas, add idea items
+        if (!isUser && ideaData && ideaData.ideas && ideaData.ideas.length > 0) {
+          ideaData.ideas.forEach(ideaObj => {
+            const ideaItem = document.createElement('div');
+            ideaItem.className = 'idea-item';
+            ideaItem.innerHTML = `
+              <div>${ideaObj.text}</div>
+              <div class="idea-actions">
+                <button class="idea-btn save-btn" data-idea-id="${ideaObj.id}">
+                  <i class="fas fa-bookmark"></i> 收藏
+                </button>
+                <button class="idea-btn like-btn" data-idea-id="${ideaObj.id}">
+                  <i class="fas fa-thumbs-up"></i> 喜欢
+                </button>
+                <button class="idea-btn explore-btn" data-idea-id="${ideaObj.id}">
+                  <i class="fas fa-search"></i> 深入
+                </button>
+              </div>
+            `;
+            bubble.appendChild(ideaItem);
+          });
+        }
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(bubble);
+        messagesContainer.appendChild(messageDiv);
+        
+        // Trigger the appear animation
+        setTimeout(() => {
+          messageDiv.classList.add('appear');
+        }, 10);
+        
+        // Scroll to bottom with smooth animation
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: 'smooth'
+        });
+        
+        // Add event listeners for idea buttons
+        if (!isUser && ideaData && ideaData.ideas) {
+          ideaData.ideas.forEach(ideaObj => {
+            document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`)?.addEventListener('click', () => {
+              if (ideaEngine.saveIdea(ideaObj)) {
+                // Visual feedback with spring animation
+                const btn = document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`);
+                btn.innerHTML = '<i class="fas fa-check"></i> 已收藏';
+                btn.style.background = 'linear-gradient(135deg, #dcfce7 0%, color-mix(in srgb, #dcfce7 85%, black) 50%, color-mix(in srgb, #dcfce7 70%, black) 100%)';
+                btn.style.color = '#16a34a';
+                
+                // Add bounce animation
+                btn.animate([
+                  { transform: 'scale(1)' },
+                  { transform: 'scale(1.1)' },
+                  { transform: 'scale(1)' }
+                ], {
+                  duration: 300,
+                  easing: 'cubic-bezier(0.5, 0.75, 0.25, 1.25)'
+                });
+                
+                setTimeout(() => {
+                  btn.innerHTML = '<i class="fas fa-bookmark"></i> 收藏';
+                  btn.style.background = '';
+                  btn.style.color = '';
+                }, 2000);
+                
+                updateStatsDisplay();
+              } else {
+                // Visual feedback for already saved with shake animation
+                const btn = document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`);
+                btn.style.background = 'linear-gradient(135deg, #fef2f2 0%, color-mix(in srgb, #fef2f2 85%, black) 50%, color-mix(in srgb, #fef2f2 70%, black) 100%)';
+                btn.style.color = '#ef4444';
+                
+                // Shake animation
+                btn.animate([
+                  { transform: 'translateX(0)' },
+                  { transform: 'translateX(-5px)' },
+                  { transform: 'translateX(5px)' },
+                  { transform: 'translateX(0)' }
+                ], {
+                  duration: 300,
+                  easing: 'ease-in-out'
+                });
+                
+                setTimeout(() => {
+                  btn.style.background = '';
+                  btn.style.color = '';
+                }, 1000);
+                
+                alert('这个想法已经被收藏过了');
+              }
+            });
+            
+            document.querySelector(`.explore-btn[data-idea-id="${ideaObj.id}"]`)?.addEventListener('click', () => {
+              userInput.value = `告诉我更多关于这个想法的信息: ${ideaObj.text}`;
+              userInput.focus();
+            });
+          });
+        }
+      }
+
+      // Function to show typing indicator
+      function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message system';
+        typingDiv.id = 'typing-indicator';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar system';
+        avatar.innerHTML = '<i class="fas fa-robot"></i>';
+        
+        const indicator = document.createElement('div');
+        indicator.className = 'typing-indicator';
+        indicator.innerHTML = '<i class="fas fa-sync fa-spin"></i> <span>正在思考...</span>';
+        
+        typingDiv.appendChild(avatar);
+        typingDiv.appendChild(indicator);
+        messagesContainer.appendChild(typingDiv);
+        
+        // Trigger the appear animation
+        setTimeout(() => {
+          typingDiv.classList.add('appear');
+        }, 10);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // Function to hide typing indicator
+      function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+          // Add fade out animation
+          typingIndicator.style.animation = 'fadeOut 0.2s ease-out forwards';
+          
+          setTimeout(() => {
+            typingIndicator.remove();
+          }, 200);
+        }
+      }
+
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
+      }
+
+      // Function to show saved ideas panel
+      function showSavedIdeasPanel() {
+        // Add entrance animation
+        savedPanel.classList.add('show');
+        savedPanel.animate([
+          { opacity: 0, transform: 'scale(0.95) translateY(-10px)' },
+          { opacity: 1, transform: 'scale(1) translateY(0)' }
+        ], {
+          duration: 350,
+          easing: 'cubic-bezier(0.33, 0.66, 0.33, 1)'
+        });
+      }
+
+      // Function to hide saved ideas panel
+      function hideSavedIdeasPanel() {
+        // Add exit animation
+        savedPanel.animate([
+          { opacity: 1, transform: 'scale(1) translateY(0)' },
+          { opacity: 0, transform: 'scale(0.95) translateY(-10px)' }
+        ], {
+          duration: 200,
+          easing: 'ease-out'
+        });
+        
+        setTimeout(() => {
+          savedPanel.classList.remove('show');
+        }, 200);
+      }
+
+      // Function to update saved ideas list
+      function updateSavedIdeasList() {
+        savedList.innerHTML = '';
+        
+        if (ideaEngine.savedIdeas.length === 0) {
+          savedList.innerHTML = '<p style="color:var(--gray-500); text-align:center; padding:20px;">还没有收藏任何想法</p>';
+          return;
+        }
+        
+        ideaEngine.savedIdeas.forEach((idea, index) => {
+          const ideaEl = document.createElement('div');
+          ideaEl.className = 'saved-idea';
+          ideaEl.style.animationDelay = `${index * 0.05}s`;
+          ideaEl.innerHTML = `
+            <div>${idea.text}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+              <span class="idea-tag">${idea.domain}</span>
+              <button class="idea-btn toggle-panel" onclick="removeSavedIdea(${idea.id})" style="padding:4px 8px; background: linear-gradient(135deg, var(--destructive) 0%, color-mix(in srgb, var(--destructive) 85%, black) 50%, color-mix(in srgb, var(--destructive) 70%, black) 100%);">
+                <i class="fas fa-trash"></i> 移除
+              </button>
+            </div>
+          `;
+          savedList.appendChild(ideaEl);
+        });
+      }
+
+      // Function to remove saved idea (global for inline handler)
+      window.removeSavedIdea = function(ideaId) {
+        ideaEngine.removeSavedIdea(ideaId);
+        updateSavedIdeasList();
+        updateStatsDisplay();
+      };
+
+      // Function to handle sending a message
+      function sendMessage() {
+        const message = userInput.value.trim();
+        console.log("Sending message:", message);
+        if (!message || isProcessing) return;
+        
+        // Add user message to history
+        ideaEngine.addToHistory(message, true);
+        
+        // Add user message to UI
+        addMessage(message, true);
+        userInput.value = '';
+        
+        // Show typing indicator
+        isProcessing = true;
+        showTypingIndicator();
+        sendButton.disabled = true;
+        
+        // Simulate AI processing with spring-like timing
+        setTimeout(() => {
+          hideTypingIndicator();
+          
+          // Generate response using the idea engine
+          const response = ideaEngine.generateResponse(message);
+          
+          // Format the response message
+          let formattedResponse = response.responseText + "\n\n";
+          
+          // Add follow-up question
+          if (response.followupQuestion) {
+            formattedResponse += `\n❓ ${response.followupQuestion}`;
+          }
+          
+          // Add system response to history
+          ideaEngine.addToHistory(formattedResponse, false, {
+            ideas: response.ideas,
+            analysis: response.analysis
+          });
+          
+          // Add system response to UI with idea data
+          addMessage(formattedResponse, false, response);
+          
+          // Learn from the interaction
+          ideaEngine.learnFromInteraction(message, response);
+          
+          // Update stats display
+          updateStatsDisplay();
+          
+          isProcessing = false;
+          sendButton.disabled = false;
+        }, 1500);
+      }
+
+      // Event listeners
+      sendButton.addEventListener('click', sendMessage);
+      
+      userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+      
+      // Auto-resize textarea
+      userInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+      });
+      
+      // Toggle saved ideas panel
+      showSavedBtn.addEventListener('click', showSavedIdeasPanel);
+      closePanelBtn.addEventListener('click', hideSavedIdeasPanel);
+      
+      // Close panel when clicking outside
+      document.addEventListener('click', function(event) {
+        if (savedPanel.classList.contains('show') && 
+            !savedPanel.contains(event.target) && 
+            event.target !== showSavedBtn) {
+          hideSavedIdeasPanel();
+        }
+      });
+      
+      // Add initial welcome message if there are no messages
+      if (messagesContainer.children.length === 0) {
+        ideaEngine.addToHistory("你好！我是你的AI创意伙伴，今天想探索什么有趣的想法？", false);
+        // The initial message is already in the HTML
+        updateStatsDisplay();
+      }
+      
+      // Initialize stats display
+      updateStatsDisplay();
+    });
+  </script>
 </body>
 </html>
