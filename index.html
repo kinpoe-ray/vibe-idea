@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vibe Idea - Updated Debug Version</title>
-  <!-- Cache buster: v2.0 -->
+  <title>Vibe Idea - Enhanced Version</title>
+  <!-- Cache buster: v3.0 -->
   <style>
     * {
       margin: 0;
@@ -200,15 +200,6 @@
       color: #777;
     }
 
-    .debug-info {
-      background: #f0f0f0;
-      padding: 10px;
-      border-radius: 5px;
-      margin-top: 10px;
-      font-size: 0.8rem;
-      font-family: monospace;
-    }
-
     /* Pixel art styling for the character */
     .pixel-character {
       position: absolute;
@@ -305,8 +296,8 @@
   <div id="root">
     <div class="app-container">
       <div class="header">
-        <h1>Vibe Idea - Debug</h1>
-        <p>你的AI创意伙伴 (Debug Version)</p>
+        <h1>Vibe Idea - Enhanced</h1>
+        <p>你的AI创意伙伴 (Enhanced Version)</p>
         <div class="pixel-character">
           <div class="pixel-head"></div>
           <div class="pixel-eye left"></div>
@@ -335,9 +326,15 @@
   </div>
 
   <script>
-    // Simple Idea Engine for Web App
-    class SimpleIdeaEngine {
+    // Enhanced Idea Engine with Memory and Context Awareness
+    class EnhancedIdeaEngine {
       constructor() {
+        this.conversationHistory = [];
+        this.userPreferences = {
+          preferredDomains: [],
+          favoriteTypes: []
+        };
+        
         this.knowledgeDomains = [
           'technology', 'sustainability', 'education', 'health', 
           'creativity', 'business', 'social_impact', 'art'
@@ -349,58 +346,109 @@
             'Blockchain-based platform for {domain}',
             'IoT system to monitor and improve {domain}',
             'Mobile app to help users with {domain}',
-            'AR/VR experience for {domain} education'
+            'AR/VR experience for {domain} education',
+            'Machine learning model to predict {domain} trends',
+            'Cybersecurity framework for {domain} systems'
           ],
           sustainability: [
             'Circular economy approach to {domain}',
             'Zero-waste solution for {domain}',
             'Renewable energy application in {domain}',
             'Community-driven {domain} initiative',
-            'Upcycling project focused on {domain}'
+            'Upcycling project focused on {domain}',
+            'Carbon footprint tracker for {domain} activities',
+            'Water conservation method in {domain} processes'
           ],
           education: [
             'Interactive learning platform for {domain}',
             'Gamified approach to teaching {domain}',
             'Peer-to-peer knowledge sharing in {domain}',
             'Virtual reality classroom for {domain}',
-            'AI tutor specializing in {domain}'
+            'AI tutor specializing in {domain}',
+            'Open-source curriculum for {domain} skills',
+            'Cross-cultural exchange program for {domain} learners'
           ],
           health: [
             'Preventive care approach to {domain}',
             'Mental wellness program for {domain}',
             'Fitness tracking solution for {domain}',
             'Telemedicine platform for {domain}',
-            'Nutrition-focused app for {domain}'
+            'Nutrition-focused app for {domain}',
+            'Community support group for {domain} challenges',
+            'Wearable device to monitor {domain} metrics'
           ],
           creativity: [
             'Collaborative workspace for {domain} creators',
             'AI-assisted {domain} generation tool',
             'Cross-media storytelling for {domain}',
             'Creative challenge platform for {domain}',
-            'Digital archive for {domain} works'
+            'Digital archive for {domain} works',
+            'Hybrid physical-digital {domain} studio',
+            'NFT marketplace for {domain} artists'
           ],
           business: [
             'Subscription model for {domain} services',
             'Marketplace connecting {domain} providers',
             'Freemium tool for {domain} professionals',
             'Consulting service specializing in {domain}',
-            'White-label solution for {domain} businesses'
+            'White-label solution for {domain} businesses',
+            'Micro-investment platform for {domain} startups',
+            'Remote collaboration suite for {domain} teams'
           ],
           social_impact: [
             'Non-profit organization addressing {domain}',
             'Crowdfunding platform for {domain} projects',
             'Volunteer network focused on {domain}',
             'Awareness campaign for {domain} issues',
-            'Policy advocacy around {domain}'
+            'Policy advocacy around {domain}',
+            'Global movement for {domain} rights',
+            'Local community hub for {domain} initiatives'
           ],
           art: [
             'Interactive {domain} installation',
             'Digital gallery for {domain} artists',
             'Collaborative {domain} project platform',
             '{domain} workshop series',
-            'Augmented reality {domain} experience'
+            'Augmented reality {domain} experience',
+            'Cross-disciplinary {domain} fusion project',
+            'Public {domain} art initiative'
           ]
         };
+        
+        this.followupTemplates = {
+          exploration: [
+            "你希望这个想法解决什么具体问题？",
+            "你认为这个想法面临的最大挑战是什么？",
+            "你觉得谁会从这个想法中受益最多？",
+            "你想象中最理想的实现方式是什么样的？"
+          ],
+          refinement: [
+            "你觉得这个想法的哪个方面最吸引你？",
+            "有没有什么因素可能会阻碍这个想法的实现？",
+            "你希望这个想法对社会产生什么样的影响？",
+            "你愿意为此投入多少时间和精力？"
+          ],
+          inspiration: [
+            "你最近在{domain}领域遇到过什么有趣的挑战吗？",
+            "你认为{domain}领域目前最需要什么样的创新？",
+            "你理想中的{domain}解决方案是什么样的？",
+            "有没有什么{domain}相关的经历启发了你？"
+          ]
+        };
+      }
+
+      // Add message to conversation history
+      addToHistory(message, isUser) {
+        this.conversationHistory.push({
+          text: message,
+          isUser: isUser,
+          timestamp: Date.now()
+        });
+        
+        // Keep only last 10 messages to avoid memory bloat
+        if (this.conversationHistory.length > 10) {
+          this.conversationHistory = this.conversationHistory.slice(-10);
+        }
       }
 
       analyzeInput(userInput) {
@@ -527,7 +575,9 @@
           'A platform for {domain} enthusiasts',
           'A solution that improves {domain}',
           'An educational resource for {domain}',
-          'A community focused on {domain}'
+          'A community focused on {domain}',
+          'A research initiative exploring {domain}',
+          'A toolkit for {domain} practitioners'
         ];
         
         // Replace {domain} placeholder with user's specific interest
@@ -550,6 +600,14 @@
         return ideas;
       }
 
+      generateFollowupQuestion(contextType = 'exploration', domain = 'general') {
+        const templates = this.followupTemplates[contextType] || this.followupTemplates.exploration;
+        const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+        
+        // Replace {domain} placeholder if present
+        return randomTemplate.replace(/\{domain\}/g, domain);
+      }
+
       generateResponse(userInput) {
         console.log("Generating response for:", userInput);
         // Analyze the user input
@@ -558,26 +616,50 @@
         // Generate ideas
         const ideas = this.generateIdeas(analysis, userInput);
         
-        // Create a friendly response
-        const domainResponses = {
-          technology: "Technology is a great field with lots of opportunities! Here are some ideas based on your interest:",
-          sustainability: "Sustainability is such an important area! Here are some impactful ideas for you:",
-          education: "Education is fundamental to progress! Here are some learning-focused ideas:",
-          health: "Health and wellness are crucial! Here are some ideas in this space:",
-          creativity: "Creativity drives innovation! Here are some creative project ideas:",
-          business: "Business innovation can create real impact! Here are some entrepreneurial ideas:",
-          social_impact: "Social impact work is very meaningful! Here are some ways you can make a difference:",
-          art: "Art enriches our lives! Here are some creative art-related ideas:",
-          general: "That sounds interesting! Here are some ideas based on your input:"
-        };
+        // Determine response type based on context
+        let responseText;
+        if (this.conversationHistory.length <= 1) {
+          // First interaction - use welcoming response
+          const domainResponses = {
+            technology: "Technology is a great field with lots of opportunities! I've identified your interest in tech. Here are some ideas based on your input:",
+            sustainability: "Sustainability is such an important area! I can see you're interested in environmental impact. Here are some impactful ideas for you:",
+            education: "Education is fundamental to progress! I notice you're thinking about learning. Here are some learning-focused ideas:",
+            health: "Health and wellness are crucial! I see you're interested in wellbeing. Here are some ideas in this space:",
+            creativity: "Creativity drives innovation! I can see you have artistic interests. Here are some creative project ideas:",
+            business: "Business innovation can create real impact! I notice entrepreneurial thinking. Here are some business-oriented ideas:",
+            social_impact: "Social impact work is very meaningful! I see you care about making a difference. Here are some ways you can make an impact:",
+            art: "Art enriches our lives! I can see your interest in creative expression. Here are some art-related ideas:",
+            general: "That sounds interesting! I've analyzed your input and here are some ideas based on your interests:"
+          };
+          
+          responseText = domainResponses[analysis.domain] || domainResponses.general;
+        } else {
+          // Follow-up interaction - use more contextual response
+          const followupResponses = {
+            technology: "Interesting follow-up on technology! Let me expand on some possibilities:",
+            sustainability: "Thanks for elaborating on sustainability! Here are more targeted ideas:",
+            education: "Great to hear more about education! I have some additional thoughts:",
+            health: "I appreciate you sharing more about health topics! Consider these approaches:",
+            creativity: "Love your continued interest in creativity! Here are more creative directions:",
+            business: "Thanks for diving deeper into business concepts! Here are expanded ideas:",
+            social_impact: "It's wonderful you're continuing to think about social impact! More ideas:",
+            art: "More artistic inspiration! Here are additional creative possibilities:",
+            general: "Thanks for sharing more details! Based on our conversation, here are some refined ideas:"
+          };
+          
+          responseText = followupResponses[analysis.domain] || followupResponses.general;
+        }
         
-        const responseText = domainResponses[analysis.domain] || domainResponses.general;
+        // Generate a relevant follow-up question
+        const followupContext = this.conversationHistory.length <= 1 ? 'inspiration' : 'refinement';
+        const followupQuestion = this.generateFollowupQuestion(followupContext, analysis.domain);
         
         console.log("Response text:", responseText);
         
         return {
           responseText: responseText,
-          ideas: ideas
+          ideas: ideas,
+          followupQuestion: followupQuestion
         };
       }
     }
@@ -587,7 +669,7 @@
       const messagesContainer = document.getElementById('messages-container');
       const userInput = document.getElementById('user-input');
       const sendButton = document.getElementById('send-button');
-      const ideaEngine = new SimpleIdeaEngine();
+      const ideaEngine = new EnhancedIdeaEngine();
       let isProcessing = false;
 
       // Function to add a message to the chat
@@ -656,7 +738,10 @@
         console.log("Sending message:", message);
         if (!message || isProcessing) return;
         
-        // Add user message
+        // Add user message to history
+        ideaEngine.addToHistory(message, true);
+        
+        // Add user message to UI
         addMessage(message, true);
         userInput.value = '';
         
@@ -683,10 +768,15 @@
             });
           }
           
-          // Add follow-up suggestion
-          formattedResponse += "\n期待听到你的想法!";
+          // Add follow-up question
+          if (response.followupQuestion) {
+            formattedResponse += `\n❓ ${response.followupQuestion}`;
+          }
           
-          // Add system response
+          // Add system response to history
+          ideaEngine.addToHistory(formattedResponse, false);
+          
+          // Add system response to UI
           addMessage(formattedResponse, false);
           
           isProcessing = false;
@@ -712,6 +802,7 @@
       
       // Add initial welcome message if there are no messages
       if (messagesContainer.children.length === 0) {
+        ideaEngine.addToHistory("你好！我是你的创意伙伴，今天想探索什么有趣的想法？", false);
         addMessage("你好！我是你的创意伙伴，今天想探索什么有趣的想法？", false);
       }
     });
