@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vibe Idea - Material Design Edition</title>
-  <!-- Cache buster: v7.0 -->
+  <title>Vibe Idea - Apple Animation Edition</title>
+  <!-- Cache buster: v9.0 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -37,8 +37,12 @@
       --radius-lg: 24px;
       --radius-xl: 32px;
       
-      /* Transitions */
-      --transition: all 0.2s ease;
+      /* Transitions - Apple-style spring physics */
+      --transition-snappy: cubic-bezier(0.4, 0, 0.2, 1) 0.2s; /* stiffness: 400, damping: 30 */
+      --transition-gentle: cubic-bezier(0.33, 0.66, 0.33, 1) 0.35s; /* stiffness: 300, damping: 35 */
+      --transition-bouncy: cubic-bezier(0.5, 0.75, 0.25, 1.25) 0.3s; /* stiffness: 500, damping: 25 */
+      --transition-smooth: cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s; /* stiffness: 200, damping: 40 */
+      --transition-inertia: cubic-bezier(0.34, 0.68, 0.29, 1.05) 0.25s; /* stiffness: 150, damping: 20 */
     }
 
     * {
@@ -59,6 +63,7 @@
       align-items: center;
       padding: 20px;
       color: var(--gray-800);
+      overflow-x: hidden;
     }
 
     #root {
@@ -79,6 +84,19 @@
       flex-direction: column;
       overflow: hidden;
       position: relative;
+      transform-origin: center;
+      animation: fadeInUp 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Subtle paper texture effect */
@@ -122,12 +140,30 @@
       box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
+      animation: slideInDown 0.4s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .header-content {
       display: flex;
       align-items: center;
       gap: 18px;
+      animation: fadeIn 0.3s ease-out 0.1s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .logo {
@@ -138,6 +174,18 @@
       font-size: 1.3rem;
       color: white;
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .logo-icon {
@@ -151,12 +199,20 @@
       color: var(--primary);
       box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.3);
+      transition: transform var(--transition-snappy), box-shadow var(--transition-gentle);
+    }
+
+    .logo-icon:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 40%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.4);
     }
 
     .header-stats {
       display: flex;
       gap: 24px;
       margin-left: auto;
+      animation: fadeIn 0.3s ease-out 0.2s both;
     }
 
     .stat-item {
@@ -165,6 +221,8 @@
       align-items: center;
       font-size: 0.85rem;
       color: color-mix(in srgb, white 80%, var(--gray-200));
+      animation: fadeInUp 0.3s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      animation-delay: calc(var(--delay-index) * 0.1s);
     }
 
     .stat-value {
@@ -189,23 +247,36 @@
       flex-direction: column;
       gap: 18px;
       background: transparent;
+      scroll-behavior: smooth;
     }
 
     .message {
       display: flex;
       gap: 14px;
       max-width: 85%;
-      animation: fadeIn 0.3s ease-out;
+      animation: messageSlideIn 0.4s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      opacity: 0;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .message.appear {
+      opacity: 1;
     }
 
     .message.user {
       align-self: flex-end;
       flex-direction: row-reverse;
+      animation-delay: 0.1s;
     }
 
     .message.system {
@@ -225,6 +296,7 @@
       color: white;
       box-shadow: 0 2px 6px color-mix(in srgb, black 15%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform var(--transition-snappy);
     }
 
     .avatar.user {
@@ -235,6 +307,10 @@
       background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-800) 100%);
     }
 
+    .avatar:hover {
+      transform: scale(1.1);
+    }
+
     .message-bubble {
       padding: 16px 20px;
       border-radius: var(--radius-md);
@@ -243,6 +319,13 @@
                   inset 0 1px 0 rgba(255,255,255,0.1);
       position: relative;
       max-width: 100%;
+      transition: transform var(--transition-gentle), box-shadow var(--transition-gentle);
+    }
+
+    .message-bubble:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px color-mix(in srgb, black 15%, transparent), 
+                  inset 0 1px 0 rgba(255,255,255,0.15);
     }
 
     .message.user .message-bubble {
@@ -273,9 +356,22 @@
       margin: 12px 0;
       font-size: 0.95rem;
       position: relative;
-      transition: var(--transition);
+      transition: all var(--transition-gentle);
       box-shadow: 0 2px 4px color-mix(in srgb, black 8%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: cardSlideIn 0.35s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      animation-delay: 0.1s;
+    }
+
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .idea-item:hover {
@@ -283,23 +379,24 @@
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
       border-color: color-mix(in srgb, var(--primary-light) 50%, var(--gray-200));
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .idea-actions {
       display: flex;
       gap: 10px;
       margin-top: 14px;
+      animation: fadeIn 0.25s ease-out 0.1s both;
     }
 
-    /* BUTTON STYLES IMPLEMENTATION */
+    /* BUTTON STYLES WITH APPLE-STYLE ANIMATIONS */
     .idea-btn {
       border: none;
       border-radius: var(--radius-sm);
       padding: 8px 14px;
       font-size: 0.8rem;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all var(--transition-snappy);
       display: flex;
       align-items: center;
       gap: 5px;
@@ -307,6 +404,7 @@
       color: white;
       position: relative;
       overflow: hidden;
+      transform-origin: center;
     }
 
     .idea-btn.default {
@@ -320,7 +418,7 @@
       box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
 
     .idea-btn.save-btn {
@@ -334,7 +432,7 @@
       box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
 
     .idea-btn.like-btn {
@@ -348,7 +446,7 @@
       box-shadow: 0 6px 20px color-mix(in srgb, var(--success) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
 
     .idea-btn.explore-btn {
@@ -362,11 +460,11 @@
       box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
 
     .idea-btn:active {
-      transform: translateY(0);
+      transform: translateY(0) scale(0.96);
       box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.1), 
                   inset 0 -1px 0 rgba(0,0,0,0.05);
@@ -380,11 +478,24 @@
       flex-direction: column;
       gap: 14px;
       border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      animation: slideInUp 0.4s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .input-controls {
       display: flex;
       gap: 12px;
+      animation: fadeIn 0.3s ease-out 0.1s both;
     }
 
     .input-area textarea {
@@ -396,7 +507,7 @@
       height: 60px;
       font-size: 1rem;
       outline: none;
-      transition: var(--transition);
+      transition: all var(--transition-gentle);
       background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
       box-shadow: inset 0 2px 4px color-mix(in srgb, black 3%, transparent);
     }
@@ -406,6 +517,7 @@
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent), 
                   inset 0 2px 4px color-mix(in srgb, black 5%, transparent);
       background: white;
+      transform: scale(1.01);
     }
 
     .send-button {
@@ -419,23 +531,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: var(--transition);
+      transition: all var(--transition-snappy);
       font-size: 1.2rem;
       box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
+      transform-origin: center;
     }
 
     .send-button:hover {
       background: linear-gradient(135deg, var(--primary-dark) 0%, color-mix(in srgb, var(--primary-dark) 85%, black) 50%, color-mix(in srgb, var(--primary-dark) 70%, black) 100%);
-      transform: translateY(-2px) scale(1.02);
+      transform: translateY(-3px) scale(1.03);
       box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.25), 
                   inset 0 -1px 0 rgba(0,0,0,0.15);
     }
 
     .send-button:active {
-      transform: translateY(0) scale(0.97);
+      transform: translateY(0) scale(0.96);
       box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.1), 
                   inset 0 -1px 0 rgba(0,0,0,0.05);
@@ -462,6 +575,12 @@
       color: var(--gray-600);
       box-shadow: 0 2px 4px color-mix(in srgb, black 8%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
 
     .saved-ideas-panel {
@@ -474,6 +593,23 @@
                   inset 0 1px 0 rgba(255,255,255,0.2), 
                   inset 0 -1px 0 rgba(0,0,0,0.1);
       display: none;
+      animation: modalSlideIn 0.35s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      transform-origin: top;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .saved-ideas-panel.show {
+      display: block;
     }
 
     .panel-header {
@@ -498,9 +634,22 @@
       padding: 14px 18px;
       margin-bottom: 12px;
       font-size: 0.9rem;
-      transition: var(--transition);
+      transition: all var(--transition-gentle);
       box-shadow: 0 2px 4px color-mix(in srgb, black 5%, transparent), 
                   inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: itemSlideIn 0.3s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+      animation-fill-mode: backwards;
+    }
+
+    @keyframes itemSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .saved-idea:hover {
@@ -509,6 +658,7 @@
                   inset 0 -1px 0 rgba(0,0,0,0.15);
       background: white;
       border-color: color-mix(in srgb, var(--primary-light) 40%, var(--gray-200));
+      transform: translateY(-2px);
     }
 
     .idea-tag {
@@ -521,6 +671,18 @@
       margin-left: 8px;
       font-weight: 500;
       box-shadow: 0 1px 2px color-mix(in srgb, black 15%, transparent);
+      animation: tagPop 0.3s cubic-bezier(0.5, 0.75, 0.25, 1.25) both;
+    }
+
+    @keyframes tagPop {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .toggle-panel {
@@ -530,7 +692,7 @@
       padding: 10px 18px;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all var(--transition-gentle);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -539,23 +701,65 @@
                   inset 0 -1px 0 rgba(0,0,0,0.05);
       color: var(--gray-800);
       font-weight: 500;
+      transform-origin: center;
     }
 
     .toggle-panel:hover {
       box-shadow: 0 4px 12px rgba(0,0,0,0.2), 
                   inset 0 1px 0 rgba(255,255,255,0.15), 
                   inset 0 -1px 0 rgba(0,0,0,0.08);
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
 
     .toggle-panel:active {
-      transform: translateY(0);
+      transform: translateY(0) scale(0.96);
       box-shadow: 0 1px 4px rgba(0,0,0,0.1), 
                   inset 0 1px 0 rgba(255,255,255,0.05), 
                   inset 0 -1px 0 rgba(0,0,0,0.02);
     }
 
+    /* Staggered animations for multiple items */
+    .stagger-item {
+      animation: fadeInUp 0.3s cubic-bezier(0.33, 0.66, 0.33, 1) both;
+    }
+
     /* Responsive design */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      .logo-icon:hover {
+        transform: none;
+      }
+      
+      .avatar:hover {
+        transform: none;
+      }
+      
+      .message-bubble:hover {
+        transform: none;
+      }
+      
+      .idea-item:hover {
+        transform: none;
+      }
+      
+      .idea-btn:hover {
+        transform: none;
+      }
+      
+      .send-button:hover {
+        transform: none;
+      }
+      
+      .toggle-panel:hover {
+        transform: none;
+      }
+    }
+
     @media (max-width: 768px) {
       #root {
         height: 100vh;
@@ -640,15 +844,15 @@
           <div class="tagline" style="color: color-mix(in srgb, white 90%, var(--gray-100)); opacity: 0.9;">AI创意伙伴</div>
         </div>
         <div class="header-stats">
-          <div class="stat-item">
+          <div class="stat-item" style="--delay-index: 0;">
             <div class="stat-value" id="idea-count">0</div>
             <div class="stat-label">想法</div>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" style="--delay-index: 1;">
             <div class="stat-value" id="saved-count">0</div>
             <div class="stat-label">收藏</div>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" style="--delay-index: 2;">
             <div class="stat-value" id="domain-count">0</div>
             <div class="stat-label">领域</div>
           </div>
@@ -656,7 +860,7 @@
       </div>
       
       <div id="messages-container" class="messages-container">
-        <div class="message system">
+        <div class="message system appear">
           <div class="avatar system">
             <i class="fas fa-robot"></i>
           </div>
@@ -690,8 +894,8 @@
   </div>
 
   <script>
-    // Material Design Idea Engine with Micro-Realistic Effects
-    class MaterialDesignIdeaEngine {
+    // Apple Animation Idea Engine with Spring Physics
+    class AppleAnimationIdeaEngine {
       constructor() {
         // Conversation history with enhanced metadata
         this.conversationHistory = [];
@@ -894,7 +1098,7 @@
       }
 
       analyzeInput(userInput) {
-        console.log("Material design analyzing input:", userInput);
+        console.log("Apple animation analyzing input:", userInput);
         const input = userInput.toLowerCase();
         let scores = {};
         
@@ -1081,7 +1285,7 @@
       }
 
       generateResponse(userInput) {
-        console.log("Generating material design response for:", userInput);
+        console.log("Generating apple animation response for:", userInput);
         
         // Analyze the user input
         const analysis = this.analyzeInput(userInput);
@@ -1164,7 +1368,7 @@
         const alreadySaved = this.savedIdeas.some(saved => saved.id === idea.id);
         if (!alreadySaved) {
           this.savedIdeas.push({...idea});
-          this.stats.savedIdea = this.savedIdeas.length;
+          this.stats.savedIdeas = this.savedIdeas.length;
           return true;
         }
         return false;
@@ -1205,7 +1409,7 @@
       const savedList = document.getElementById('saved-ideas-list');
       const closePanelBtn = document.getElementById('close-panel-btn');
       
-      const ideaEngine = new MaterialDesignIdeaEngine();
+      const ideaEngine = new AppleAnimationIdeaEngine();
       let isProcessing = false;
 
       // Update stats display
@@ -1265,25 +1469,37 @@
         messageDiv.appendChild(bubble);
         messagesContainer.appendChild(messageDiv);
         
-        // Scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Trigger the appear animation
+        setTimeout(() => {
+          messageDiv.classList.add('appear');
+        }, 10);
+        
+        // Scroll to bottom with smooth animation
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: 'smooth'
+        });
         
         // Add event listeners for idea buttons
         if (!isUser && ideaData && ideaData.ideas) {
           ideaData.ideas.forEach(ideaObj => {
             document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`)?.addEventListener('click', () => {
               if (ideaEngine.saveIdea(ideaObj)) {
-                // Visual feedback
+                // Visual feedback with spring animation
                 const btn = document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`);
                 btn.innerHTML = '<i class="fas fa-check"></i> 已收藏';
                 btn.style.background = 'linear-gradient(135deg, #dcfce7 0%, color-mix(in srgb, #dcfce7 85%, black) 50%, color-mix(in srgb, #dcfce7 70%, black) 100%)';
                 btn.style.color = '#16a34a';
                 
-                // Animate the button
-                btn.style.transform = 'scale(1.05)';
-                setTimeout(() => {
-                  btn.style.transform = '';
-                }, 200);
+                // Add bounce animation
+                btn.animate([
+                  { transform: 'scale(1)' },
+                  { transform: 'scale(1.1)' },
+                  { transform: 'scale(1)' }
+                ], {
+                  duration: 300,
+                  easing: 'cubic-bezier(0.5, 0.75, 0.25, 1.25)'
+                });
                 
                 setTimeout(() => {
                   btn.innerHTML = '<i class="fas fa-bookmark"></i> 收藏';
@@ -1293,10 +1509,21 @@
                 
                 updateStatsDisplay();
               } else {
-                // Visual feedback for already saved
+                // Visual feedback for already saved with shake animation
                 const btn = document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`);
                 btn.style.background = 'linear-gradient(135deg, #fef2f2 0%, color-mix(in srgb, #fef2f2 85%, black) 50%, color-mix(in srgb, #fef2f2 70%, black) 100%)';
                 btn.style.color = '#ef4444';
+                
+                // Shake animation
+                btn.animate([
+                  { transform: 'translateX(0)' },
+                  { transform: 'translateX(-5px)' },
+                  { transform: 'translateX(5px)' },
+                  { transform: 'translateX(0)' }
+                ], {
+                  duration: 300,
+                  easing: 'ease-in-out'
+                });
                 
                 setTimeout(() => {
                   btn.style.background = '';
@@ -1333,6 +1560,11 @@
         typingDiv.appendChild(indicator);
         messagesContainer.appendChild(typingDiv);
         
+        // Trigger the appear animation
+        setTimeout(() => {
+          typingDiv.classList.add('appear');
+        }, 10);
+        
         // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
@@ -1341,19 +1573,47 @@
       function hideTypingIndicator() {
         const typingIndicator = document.getElementById('typing-indicator');
         if (typingIndicator) {
-          typingIndicator.remove();
+          // Add fade out animation
+          typingIndicator.style.animation = 'fadeOut 0.2s ease-out forwards';
+          
+          setTimeout(() => {
+            typingIndicator.remove();
+          }, 200);
         }
+      }
+
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
       }
 
       // Function to show saved ideas panel
       function showSavedIdeasPanel() {
-        savedPanel.style.display = 'block';
-        updateSavedIdeasList();
+        // Add entrance animation
+        savedPanel.classList.add('show');
+        savedPanel.animate([
+          { opacity: 0, transform: 'scale(0.95) translateY(-10px)' },
+          { opacity: 1, transform: 'scale(1) translateY(0)' }
+        ], {
+          duration: 350,
+          easing: 'cubic-bezier(0.33, 0.66, 0.33, 1)'
+        });
       }
 
       // Function to hide saved ideas panel
       function hideSavedIdeasPanel() {
-        savedPanel.style.display = 'none';
+        // Add exit animation
+        savedPanel.animate([
+          { opacity: 1, transform: 'scale(1) translateY(0)' },
+          { opacity: 0, transform: 'scale(0.95) translateY(-10px)' }
+        ], {
+          duration: 200,
+          easing: 'ease-out'
+        });
+        
+        setTimeout(() => {
+          savedPanel.classList.remove('show');
+        }, 200);
       }
 
       // Function to update saved ideas list
@@ -1365,9 +1625,10 @@
           return;
         }
         
-        ideaEngine.savedIdeas.forEach(idea => {
+        ideaEngine.savedIdeas.forEach((idea, index) => {
           const ideaEl = document.createElement('div');
           ideaEl.className = 'saved-idea';
+          ideaEl.style.animationDelay = `${index * 0.05}s`;
           ideaEl.innerHTML = `
             <div>${idea.text}</div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
@@ -1406,7 +1667,7 @@
         showTypingIndicator();
         sendButton.disabled = true;
         
-        // Simulate AI processing
+        // Simulate AI processing with spring-like timing
         setTimeout(() => {
           hideTypingIndicator();
           
@@ -1463,7 +1724,7 @@
       
       // Close panel when clicking outside
       document.addEventListener('click', function(event) {
-        if (savedPanel.style.display === 'block' && 
+        if (savedPanel.classList.contains('show') && 
             !savedPanel.contains(event.target) && 
             event.target !== showSavedBtn) {
           hideSavedIdeasPanel();
@@ -1473,7 +1734,7 @@
       // Add initial welcome message if there are no messages
       if (messagesContainer.children.length === 0) {
         ideaEngine.addToHistory("你好！我是你的AI创意伙伴，今天想探索什么有趣的想法？", false);
-        addMessage("你好！我是你的AI创意伙伴，今天想探索什么有趣的想法？", false);
+        // The initial message is already in the HTML
         updateStatsDisplay();
       }
       
