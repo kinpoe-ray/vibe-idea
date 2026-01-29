@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vibe Idea - Enhanced Version</title>
-  <!-- Cache buster: v3.0 -->
+  <title>Vibe Idea - Deep Thought Version</title>
+  <!-- Cache buster: v4.0 -->
   <style>
     * {
       margin: 0;
@@ -24,7 +24,7 @@
 
     #root {
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
       height: 90vh;
       background: white;
       border-radius: 20px;
@@ -56,6 +56,21 @@
     .header p {
       opacity: 0.9;
       font-size: 1rem;
+    }
+
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 15px;
     }
 
     .messages-container {
@@ -135,10 +150,45 @@
       margin-bottom: 0;
     }
 
+    .idea-item {
+      background: #f0f8ff;
+      border-left: 3px solid #4facfe;
+      padding: 8px 12px;
+      margin: 8px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .idea-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .idea-btn {
+      background: #e6f0ff;
+      border: none;
+      border-radius: 15px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .idea-btn:hover {
+      background: #d1e3ff;
+    }
+
     .input-area {
       padding: 20px;
       background: white;
       border-top: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .input-controls {
       display: flex;
       gap: 10px;
     }
@@ -198,6 +248,53 @@
       align-self: flex-start;
       font-style: italic;
       color: #777;
+    }
+
+    .saved-ideas-panel {
+      background: #f8f9ff;
+      border: 1px solid #e0e4f0;
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .saved-idea {
+      background: white;
+      border: 1px solid #e0e4f0;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .idea-tag {
+      display: inline-block;
+      background: #e6f0ff;
+      color: #4a90e2;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      margin-left: 5px;
+    }
+
+    .toggle-panel {
+      background: #e6f0ff;
+      border: none;
+      border-radius: 15px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      align-self: flex-start;
     }
 
     /* Pixel art styling for the character */
@@ -274,11 +371,8 @@
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-      
       #root {
+        width: 95%;
         height: 95vh;
       }
       
@@ -289,6 +383,12 @@
       .message {
         max-width: 90%;
       }
+      
+      .header-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
     }
   </style>
 </head>
@@ -296,8 +396,13 @@
   <div id="root">
     <div class="app-container">
       <div class="header">
-        <h1>Vibe Idea - Enhanced</h1>
-        <p>你的AI创意伙伴 (Enhanced Version)</p>
+        <h1>Vibe Idea - Deep Thought</h1>
+        <p>你的AI创意伙伴 (Advanced Version)</p>
+        <div class="header-stats">
+          <div class="stat-item">想法: <span id="idea-count">0</span></div>
+          <div class="stat-item">收藏: <span id="saved-count">0</span></div>
+          <div class="stat-item">领域: <span id="domain-count">0</span></div>
+        </div>
         <div class="pixel-character">
           <div class="pixel-head"></div>
           <div class="pixel-eye left"></div>
@@ -319,20 +424,45 @@
       </div>
       
       <div class="input-area">
-        <textarea id="user-input" placeholder="分享你的兴趣或问题..."></textarea>
-        <button id="send-button" class="send-button">➤</button>
+        <div class="input-controls">
+          <textarea id="user-input" placeholder="分享你的兴趣或问题..."></textarea>
+          <button id="send-button" class="send-button">➤</button>
+        </div>
+        <button id="show-saved-btn" class="toggle-panel">查看收藏的想法</button>
+        <div id="saved-ideas-panel" class="saved-ideas-panel">
+          <div class="panel-header">
+            <span>收藏的想法</span>
+            <button id="close-panel-btn">×</button>
+          </div>
+          <div id="saved-ideas-list"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Enhanced Idea Engine with Memory and Context Awareness
-    class EnhancedIdeaEngine {
+    // Deep Thought Idea Engine with Advanced Features
+    class DeepThoughtIdeaEngine {
       constructor() {
+        // Conversation history with enhanced metadata
         this.conversationHistory = [];
+        
+        // User preferences and learning
         this.userPreferences = {
-          preferredDomains: [],
-          favoriteTypes: []
+          preferredDomains: {},
+          favoriteTypes: {},
+          engagementPatterns: {}
+        };
+        
+        // Saved/liked ideas
+        this.savedIdeas = [];
+        
+        // Statistics
+        this.stats = {
+          totalIdeas: 0,
+          savedIdeas: 0,
+          exploredDomains: new Set(),
+          conversationTurns: 0
         };
         
         this.knowledgeDomains = [
@@ -348,7 +478,10 @@
             'Mobile app to help users with {domain}',
             'AR/VR experience for {domain} education',
             'Machine learning model to predict {domain} trends',
-            'Cybersecurity framework for {domain} systems'
+            'Cybersecurity framework for {domain} systems',
+            'Decentralized application for {domain}',
+            'Voice interface for {domain} access',
+            'Edge computing solution for {domain}'
           ],
           sustainability: [
             'Circular economy approach to {domain}',
@@ -357,7 +490,10 @@
             'Community-driven {domain} initiative',
             'Upcycling project focused on {domain}',
             'Carbon footprint tracker for {domain} activities',
-            'Water conservation method in {domain} processes'
+            'Water conservation method in {domain} processes',
+            'Biodiversity monitoring system for {domain}',
+            'Sustainable supply chain for {domain}',
+            'Green transportation solution for {domain}'
           ],
           education: [
             'Interactive learning platform for {domain}',
@@ -366,7 +502,10 @@
             'Virtual reality classroom for {domain}',
             'AI tutor specializing in {domain}',
             'Open-source curriculum for {domain} skills',
-            'Cross-cultural exchange program for {domain} learners'
+            'Cross-cultural exchange program for {domain} learners',
+            'Project-based learning for {domain}',
+            'Skill assessment platform for {domain}',
+            'Educational content creator tool for {domain}'
           ],
           health: [
             'Preventive care approach to {domain}',
@@ -375,7 +514,10 @@
             'Telemedicine platform for {domain}',
             'Nutrition-focused app for {domain}',
             'Community support group for {domain} challenges',
-            'Wearable device to monitor {domain} metrics'
+            'Wearable device to monitor {domain} metrics',
+            'Personalized therapy approach for {domain}',
+            'Health data analytics for {domain}',
+            'Accessibility solution for {domain} patients'
           ],
           creativity: [
             'Collaborative workspace for {domain} creators',
@@ -384,7 +526,10 @@
             'Creative challenge platform for {domain}',
             'Digital archive for {domain} works',
             'Hybrid physical-digital {domain} studio',
-            'NFT marketplace for {domain} artists'
+            'NFT marketplace for {domain} artists',
+            'Creative collaboration tool for {domain}',
+            'Immersive {domain} experience',
+            'Generative {domain} algorithm'
           ],
           business: [
             'Subscription model for {domain} services',
@@ -393,7 +538,10 @@
             'Consulting service specializing in {domain}',
             'White-label solution for {domain} businesses',
             'Micro-investment platform for {domain} startups',
-            'Remote collaboration suite for {domain} teams'
+            'Remote collaboration suite for {domain} teams',
+            'Business intelligence for {domain} sector',
+            'Customer success platform for {domain}',
+            'Revenue optimization for {domain} companies'
           ],
           social_impact: [
             'Non-profit organization addressing {domain}',
@@ -402,7 +550,10 @@
             'Awareness campaign for {domain} issues',
             'Policy advocacy around {domain}',
             'Global movement for {domain} rights',
-            'Local community hub for {domain} initiatives'
+            'Local community hub for {domain} initiatives',
+            'Impact measurement tool for {domain}',
+            'Social entrepreneurship incubator for {domain}',
+            'Grassroots organizing platform for {domain}'
           ],
           art: [
             'Interactive {domain} installation',
@@ -411,7 +562,10 @@
             '{domain} workshop series',
             'Augmented reality {domain} experience',
             'Cross-disciplinary {domain} fusion project',
-            'Public {domain} art initiative'
+            'Public {domain} art initiative',
+            'Artist residency program for {domain}',
+            'Art market platform for {domain}',
+            'Cultural preservation project for {domain}'
           ]
         };
         
@@ -433,26 +587,65 @@
             "你认为{domain}领域目前最需要什么样的创新？",
             "你理想中的{domain}解决方案是什么样的？",
             "有没有什么{domain}相关的经历启发了你？"
+          ],
+          deep_dive: [
+            "你能详细描述一下你希望实现的具体效果吗？",
+            "你考虑过这个想法的长期影响吗？",
+            "有没有其他领域可以借鉴类似的方法？",
+            "你觉得这个想法如何适应未来的变化？"
           ]
         };
       }
 
-      // Add message to conversation history
-      addToHistory(message, isUser) {
+      // Add message to conversation history with metadata
+      addToHistory(message, isUser, metadata = {}) {
         this.conversationHistory.push({
           text: message,
           isUser: isUser,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          ...metadata
         });
         
-        // Keep only last 10 messages to avoid memory bloat
-        if (this.conversationHistory.length > 10) {
-          this.conversationHistory = this.conversationHistory.slice(-10);
+        // Keep only last 20 messages to avoid memory bloat
+        if (this.conversationHistory.length > 20) {
+          this.conversationHistory = this.conversationHistory.slice(-20);
         }
+        
+        this.stats.conversationTurns++;
+      }
+
+      // Learn from user interactions
+      learnFromInteraction(userInput, response) {
+        // Extract domains mentioned in user input
+        const inputLower = userInput.toLowerCase();
+        for (const domain of this.knowledgeDomains) {
+          if (inputLower.includes(domain.replace('_', ' '))) {
+            this.userPreferences.preferredDomains[domain] = (this.userPreferences.preferredDomains[domain] || 0) + 1;
+          }
+        }
+        
+        // Track engagement patterns
+        this.userPreferences.engagementPatterns[this.stats.conversationTurns % 5] = 
+          (this.userPreferences.engagementPatterns[this.stats.conversationTurns % 5] || 0) + 1;
+      }
+
+      // Get user's preferred domain based on history
+      getPreferredDomain() {
+        let maxCount = 0;
+        let preferredDomain = 'general';
+        
+        for (const [domain, count] of Object.entries(this.userPreferences.preferredDomains)) {
+          if (count > maxCount) {
+            maxCount = count;
+            preferredDomain = domain;
+          }
+        }
+        
+        return preferredDomain;
       }
 
       analyzeInput(userInput) {
-        console.log("Analyzing input:", userInput);
+        console.log("Deep analyzing input:", userInput);
         const input = userInput.toLowerCase();
         let scores = {};
         
@@ -551,9 +744,14 @@
           }
         }
         
-        // If no strong match, default to general
+        // If no strong match, default to user's preferred domain or general
         if (bestScore === 0) {
-          bestDomain = 'general';
+          bestDomain = this.getPreferredDomain();
+        }
+        
+        // Update stats
+        if (bestDomain !== 'general') {
+          this.stats.exploredDomains.add(bestDomain);
         }
         
         console.log("Best domain:", bestDomain, "with score:", bestScore);
@@ -577,7 +775,10 @@
           'An educational resource for {domain}',
           'A community focused on {domain}',
           'A research initiative exploring {domain}',
-          'A toolkit for {domain} practitioners'
+          'A toolkit for {domain} practitioners',
+          'A collaborative project for {domain}',
+          'An experimental approach to {domain}',
+          'A cross-domain solution involving {domain}'
         ];
         
         // Replace {domain} placeholder with user's specific interest
@@ -591,11 +792,34 @@
         console.log("Key terms:", keyTerms, "Domain placeholder:", domainPlaceholder);
         
         for (let i = 0; i < count && i < templates.length; i++) {
-          const template = templates[i];
+          // Select a template that hasn't been used recently
+          const availableTemplates = templates.filter(template => 
+            !this.conversationHistory.some(msg => 
+              msg.text && msg.text.includes(template.replace(/\{domain\}/g, domainPlaceholder))
+            )
+          );
+          
+          const template = availableTemplates.length > 0 ? 
+            availableTemplates[i % availableTemplates.length] : 
+            templates[i % templates.length];
+            
           const idea = template.replace(/\{domain\}/g, domainPlaceholder);
-          ideas.push(idea);
+          
+          // Create idea object with metadata
+          const ideaObj = {
+            id: Date.now() + i,
+            text: idea,
+            domain: domain,
+            timestamp: Date.now(),
+            originalTemplate: template
+          };
+          
+          ideas.push(ideaObj);
           console.log(`Generated idea ${i+1}:`, idea);
         }
+        
+        // Update stats
+        this.stats.totalIdeas += ideas.length;
         
         return ideas;
       }
@@ -609,49 +833,71 @@
       }
 
       generateResponse(userInput) {
-        console.log("Generating response for:", userInput);
+        console.log("Generating deep response for:", userInput);
+        
         // Analyze the user input
         const analysis = this.analyzeInput(userInput);
         
         // Generate ideas
         const ideas = this.generateIdeas(analysis, userInput);
         
-        // Determine response type based on context
+        // Determine response type based on context and conversation history
         let responseText;
-        if (this.conversationHistory.length <= 1) {
+        const conversationDepth = this.conversationHistory.filter(msg => msg.isUser).length;
+        
+        if (conversationDepth <= 1) {
           // First interaction - use welcoming response
           const domainResponses = {
-            technology: "Technology is a great field with lots of opportunities! I've identified your interest in tech. Here are some ideas based on your input:",
-            sustainability: "Sustainability is such an important area! I can see you're interested in environmental impact. Here are some impactful ideas for you:",
-            education: "Education is fundamental to progress! I notice you're thinking about learning. Here are some learning-focused ideas:",
-            health: "Health and wellness are crucial! I see you're interested in wellbeing. Here are some ideas in this space:",
-            creativity: "Creativity drives innovation! I can see you have artistic interests. Here are some creative project ideas:",
-            business: "Business innovation can create real impact! I notice entrepreneurial thinking. Here are some business-oriented ideas:",
-            social_impact: "Social impact work is very meaningful! I see you care about making a difference. Here are some ways you can make an impact:",
-            art: "Art enriches our lives! I can see your interest in creative expression. Here are some art-related ideas:",
-            general: "That sounds interesting! I've analyzed your input and here are some ideas based on your interests:"
+            technology: "技术是一个充满机遇的领域！我识别出您对科技的兴趣。基于您的输入，这里有一些想法：",
+            sustainability: "可持续发展是一个重要的领域！我看出您关注环境影响。这里有一些有影响力的想法供您参考：",
+            education: "教育是进步的基础！我注意到您在思考学习相关的话题。这里有一些学习导向的想法：",
+            health: "健康和福祉至关重要！我看到您对健康话题感兴趣。这里有一些相关的思路：",
+            creativity: "创造力推动创新！我可以看出您有艺术方面的兴趣。这里有一些创意项目的想法：",
+            business: "商业创新可以产生真正的影响力！我注意到创业思维。这里有一些商业导向的想法：",
+            social_impact: "社会影响力工作非常有意义！我看到您关心如何产生影响。这里有一些您可以产生影响的方式：",
+            art: "艺术丰富我们的生活！我可以看出您对创意表达有兴趣。这里有一些艺术相关的想法：",
+            general: "听起来很有趣！我分析了您的输入，这里有一些基于您兴趣的想法："
           };
           
           responseText = domainResponses[analysis.domain] || domainResponses.general;
-        } else {
-          // Follow-up interaction - use more contextual response
+        } else if (conversationDepth <= 3) {
+          // Early follow-up - use more contextual response
           const followupResponses = {
-            technology: "Interesting follow-up on technology! Let me expand on some possibilities:",
-            sustainability: "Thanks for elaborating on sustainability! Here are more targeted ideas:",
-            education: "Great to hear more about education! I have some additional thoughts:",
-            health: "I appreciate you sharing more about health topics! Consider these approaches:",
-            creativity: "Love your continued interest in creativity! Here are more creative directions:",
-            business: "Thanks for diving deeper into business concepts! Here are expanded ideas:",
-            social_impact: "It's wonderful you're continuing to think about social impact! More ideas:",
-            art: "More artistic inspiration! Here are additional creative possibilities:",
-            general: "Thanks for sharing more details! Based on our conversation, here are some refined ideas:"
+            technology: "关于技术的有趣跟进！让我扩展一些可能性：",
+            sustainability: "感谢您进一步阐述可持续性！这里有更多有针对性的想法：",
+            education: "很高兴听到更多关于教育的信息！我有一些额外的想法：",
+            health: "我很欣赏您分享更多关于健康主题的信息！请考虑这些方法：",
+            creativity: "热爱您持续的创意兴趣！这里有更多的创意方向：",
+            business: "感谢您深入探讨商业概念！这里有扩展的想法：",
+            social_impact: "很棒，您继续思考社会影响！更多想法：",
+            art: "更多艺术灵感！这里有额外的创意可能性：",
+            general: "感谢您分享更多详情！基于我们的对话，这里有一些经过深思熟虑的想法："
           };
           
           responseText = followupResponses[analysis.domain] || followupResponses.general;
+        } else {
+          // Deeper conversation - use insight-oriented response
+          const insightResponses = {
+            technology: "基于我们之前的讨论，我对技术领域有了更深的见解。这里有一些更有针对性的想法：",
+            sustainability: "经过我们深入的对话，我在可持续性方面有了新的视角。这里有更精细的想法：",
+            education: "通过我们的交流，我对教育有了更好的理解。这里有一些更具体的建议：",
+            health: "我们对话的深度让我对健康领域有了更细致的认识。这里有一些深入的想法：",
+            creativity: "我们的创意交流激发了这些更富想象力的想法：",
+            business: "基于我们多次的商业讨论，我提炼出这些更精准的商业想法：",
+            social_impact: "通过我们持续的社会影响对话，我提出了这些更有深度的想法：",
+            art: "我们艺术话题的深入交流启发了这些更精致的创意：",
+            general: "通过我们深入的对话，我为您提炼出这些更符合您兴趣的想法："
+          };
+          
+          responseText = insightResponses[analysis.domain] || insightResponses.general;
         }
         
-        // Generate a relevant follow-up question
-        const followupContext = this.conversationHistory.length <= 1 ? 'inspiration' : 'refinement';
+        // Generate a relevant follow-up question based on conversation depth
+        let followupContext;
+        if (conversationDepth <= 1) followupContext = 'inspiration';
+        else if (conversationDepth <= 3) followupContext = 'refinement';
+        else followupContext = 'deep_dive';
+        
         const followupQuestion = this.generateFollowupQuestion(followupContext, analysis.domain);
         
         console.log("Response text:", responseText);
@@ -659,7 +905,41 @@
         return {
           responseText: responseText,
           ideas: ideas,
-          followupQuestion: followupQuestion
+          followupQuestion: followupQuestion,
+          analysis: analysis
+        };
+      }
+      
+      // Save an idea to user's collection
+      saveIdea(idea) {
+        // Check if idea is already saved
+        const alreadySaved = this.savedIdeas.some(saved => saved.id === idea.id);
+        if (!alreadySaved) {
+          this.savedIdeas.push({...idea});
+          this.stats.savedIdeas = this.savedIdeas.length;
+          return true;
+        }
+        return false;
+      }
+      
+      // Remove a saved idea
+      removeSavedIdea(ideaId) {
+        this.savedIdeas = this.savedIdeas.filter(idea => idea.id !== ideaId);
+        this.stats.savedIdeas = this.savedIdeas.length;
+      }
+      
+      // Get all saved ideas
+      getSavedIdeas() {
+        return this.savedIdeas;
+      }
+      
+      // Get statistics
+      getStats() {
+        return {
+          totalIdeas: this.stats.totalIdeas,
+          savedIdeas: this.stats.savedIdeas,
+          exploredDomains: this.stats.exploredDomains.size,
+          conversationTurns: this.stats.conversationTurns
         };
       }
     }
@@ -669,11 +949,27 @@
       const messagesContainer = document.getElementById('messages-container');
       const userInput = document.getElementById('user-input');
       const sendButton = document.getElementById('send-button');
-      const ideaEngine = new EnhancedIdeaEngine();
+      const ideaCountEl = document.getElementById('idea-count');
+      const savedCountEl = document.getElementById('saved-count');
+      const domainCountEl = document.getElementById('domain-count');
+      const showSavedBtn = document.getElementById('show-saved-btn');
+      const savedPanel = document.getElementById('saved-ideas-panel');
+      const savedList = document.getElementById('saved-ideas-list');
+      const closePanelBtn = document.getElementById('close-panel-btn');
+      
+      const ideaEngine = new DeepThoughtIdeaEngine();
       let isProcessing = false;
 
+      // Update stats display
+      function updateStatsDisplay() {
+        const stats = ideaEngine.getStats();
+        ideaCountEl.textContent = stats.totalIdeas;
+        savedCountEl.textContent = stats.savedIdeas;
+        domainCountEl.textContent = stats.exploredDomains;
+      }
+
       // Function to add a message to the chat
-      function addMessage(text, isUser) {
+      function addMessage(text, isUser, ideaData = null) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user' : 'system'}`;
         
@@ -694,12 +990,48 @@
           }
         });
         
+        // If this is a system message with ideas, add idea items
+        if (!isUser && ideaData && ideaData.ideas && ideaData.ideas.length > 0) {
+          ideaData.ideas.forEach(ideaObj => {
+            const ideaItem = document.createElement('div');
+            ideaItem.className = 'idea-item';
+            ideaItem.innerHTML = `
+              <div>${ideaObj.text}</div>
+              <div class="idea-actions">
+                <button class="idea-btn save-btn" data-idea-id="${ideaObj.id}">收藏</button>
+                <button class="idea-btn like-btn" data-idea-id="${ideaObj.id}">喜欢</button>
+                <button class="idea-btn explore-btn" data-idea-id="${ideaObj.id}">深入</button>
+              </div>
+            `;
+            bubble.appendChild(ideaItem);
+          });
+        }
+        
         messageDiv.appendChild(avatar);
         messageDiv.appendChild(bubble);
         messagesContainer.appendChild(messageDiv);
         
         // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // Add event listeners for idea buttons
+        if (!isUser && ideaData && ideaData.ideas) {
+          ideaData.ideas.forEach(ideaObj => {
+            document.querySelector(`.save-btn[data-idea-id="${ideaObj.id}"]`)?.addEventListener('click', () => {
+              if (ideaEngine.saveIdea(ideaObj)) {
+                alert(`已收藏想法: "${ideaObj.text}"`);
+                updateStatsDisplay();
+              } else {
+                alert('这个想法已经被收藏过了');
+              }
+            });
+            
+            document.querySelector(`.explore-btn[data-idea-id="${ideaObj.id}"]`)?.addEventListener('click', () => {
+              userInput.value = `告诉我更多关于这个想法的信息: ${ideaObj.text}`;
+              userInput.focus();
+            });
+          });
+        }
       }
 
       // Function to show typing indicator
@@ -714,7 +1046,7 @@
         
         const indicator = document.createElement('div');
         indicator.className = 'typing-indicator';
-        indicator.innerHTML = '<span>思考中</span><span>.</span><span>.</span><span>.</span>';
+        indicator.innerHTML = '<span>深度思考中</span><span>.</span><span>.</span><span>.</span>';
         
         typingDiv.appendChild(avatar);
         typingDiv.appendChild(indicator);
@@ -731,6 +1063,47 @@
           typingIndicator.remove();
         }
       }
+
+      // Function to show saved ideas panel
+      function showSavedIdeasPanel() {
+        savedPanel.style.display = 'block';
+        updateSavedIdeasList();
+      }
+
+      // Function to hide saved ideas panel
+      function hideSavedIdeasPanel() {
+        savedPanel.style.display = 'none';
+      }
+
+      // Function to update saved ideas list
+      function updateSavedIdeasList() {
+        savedList.innerHTML = '';
+        
+        if (ideaEngine.savedIdeas.length === 0) {
+          savedList.innerHTML = '<p>还没有收藏任何想法</p>';
+          return;
+        }
+        
+        ideaEngine.savedIdeas.forEach(idea => {
+          const ideaEl = document.createElement('div');
+          ideaEl.className = 'saved-idea';
+          ideaEl.innerHTML = `
+            <div>${idea.text}</div>
+            <div>
+              <span class="idea-tag">${idea.domain}</span>
+              <button class="idea-btn" onclick="removeSavedIdea(${idea.id})" style="margin-left: 5px;">移除</button>
+            </div>
+          `;
+          savedList.appendChild(ideaEl);
+        });
+      }
+
+      // Function to remove saved idea (global for inline handler)
+      window.removeSavedIdea = function(ideaId) {
+        ideaEngine.removeSavedIdea(ideaId);
+        updateSavedIdeasList();
+        updateStatsDisplay();
+      };
 
       // Function to handle sending a message
       function sendMessage() {
@@ -760,24 +1133,25 @@
           // Format the response message
           let formattedResponse = response.responseText + "\n\n";
           
-          // Add generated ideas
-          if (response.ideas.length > 0) {
-            formattedResponse += "💡 我为你想到了这些想法:\n";
-            response.ideas.forEach((idea, index) => {
-              formattedResponse += `${index + 1}. ${idea}\n`;
-            });
-          }
-          
           // Add follow-up question
           if (response.followupQuestion) {
             formattedResponse += `\n❓ ${response.followupQuestion}`;
           }
           
           // Add system response to history
-          ideaEngine.addToHistory(formattedResponse, false);
+          ideaEngine.addToHistory(formattedResponse, false, {
+            ideas: response.ideas,
+            analysis: response.analysis
+          });
           
-          // Add system response to UI
-          addMessage(formattedResponse, false);
+          // Add system response to UI with idea data
+          addMessage(formattedResponse, false, response);
+          
+          // Learn from the interaction
+          ideaEngine.learnFromInteraction(message, response);
+          
+          // Update stats display
+          updateStatsDisplay();
           
           isProcessing = false;
           sendButton.disabled = false;
@@ -800,11 +1174,28 @@
         this.style.height = Math.min(this.scrollHeight, 150) + 'px';
       });
       
+      // Toggle saved ideas panel
+      showSavedBtn.addEventListener('click', showSavedIdeasPanel);
+      closePanelBtn.addEventListener('click', hideSavedIdeasPanel);
+      
+      // Close panel when clicking outside
+      document.addEventListener('click', function(event) {
+        if (savedPanel.style.display === 'block' && 
+            !savedPanel.contains(event.target) && 
+            event.target !== showSavedBtn) {
+          hideSavedIdeasPanel();
+        }
+      });
+      
       // Add initial welcome message if there are no messages
       if (messagesContainer.children.length === 0) {
         ideaEngine.addToHistory("你好！我是你的创意伙伴，今天想探索什么有趣的想法？", false);
         addMessage("你好！我是你的创意伙伴，今天想探索什么有趣的想法？", false);
+        updateStatsDisplay();
       }
+      
+      // Initialize stats display
+      updateStatsDisplay();
     });
   </script>
 </body>
