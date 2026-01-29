@@ -9,15 +9,15 @@ The web application is designed to be deployed on Vercel as a static site.
 #### Deployment Steps:
 
 1. **Prepare your repository**:
-   - Ensure the `web-app/` directory contains:
-     - `simple-index.html` - Single-page application
+   - Ensure the repository root contains:
+     - `index.html` - Single-page application
      - `vercel.json` - Vercel configuration
 
 2. **Deploy to Vercel**:
    - Go to [vercel.com](https://vercel.com)
    - Connect your GitHub repository
    - Import the `vibe-idea` project
-   - Set the root directory to `/web-app`
+   - Use the default settings (no build command needed for static site)
    - Deploy
 
 3. **Configuration**:
@@ -27,8 +27,8 @@ The web application is designed to be deployed on Vercel as a static site.
 #### Alternative Deployment:
 
 If deploying manually to a web server:
-- Upload the contents of the `web-app/` directory
-- Ensure the server serves `simple-index.html` for all routes (SPA configuration)
+- Upload the root files (`index.html`)
+- Ensure the server serves `index.html` for all routes (SPA configuration)
 
 ### Mobile Application
 
@@ -56,8 +56,8 @@ The React Native mobile app (in `mobile-mvp/`) is designed for local development
 
 ### Web App Structure
 ```
-web-app/
-├── simple-index.html    # Single-page application
+/
+├── index.html          # Single-page application
 ├── vercel.json         # Vercel deployment configuration
 └── DEPLOYMENT.md       # This file
 ```
@@ -88,9 +88,9 @@ mobile-mvp/
 ## Troubleshooting
 
 ### Vercel Deployment Issues
-- If getting 404 errors, ensure the root directory is set correctly to `/web-app`
+- If getting 404 errors, ensure the root directory has `index.html` and `vercel.json`
 - Check that `vercel.json` is properly configured for SPA routing
-- Verify that all paths route to `simple-index.html`
+- Verify that all paths route to `index.html`
 
 ### Mobile App Issues
 - Run `npm install` in the `mobile-mvp` directory
